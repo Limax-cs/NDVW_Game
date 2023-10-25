@@ -1,5 +1,7 @@
 using UnityEngine;
-
+using UnityEngine.UI;
+using System;
+using System.Globalization;
 public class CameraBehaviour : MonoBehaviour
 {
 
@@ -19,6 +21,9 @@ public class CameraBehaviour : MonoBehaviour
     public float range = 200.0f;
     public GameObject ShootingTarget;
 
+    //Text on upper left corner
+    public Text points;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +34,9 @@ public class CameraBehaviour : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        
+        // System.DateTime currentDateTime = System.DateTime.Now;
+        // string formattedDateTime = currentDateTime.ToString("dddd, dd MMMM yyyy HH:mm:ss");
+        // points.text = "Current date and time: " + formattedDateTime;
     }
     void LateUpdate()
     {
