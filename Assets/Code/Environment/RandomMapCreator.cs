@@ -89,14 +89,12 @@ public class RandomMapCreator : MonoBehaviour{
         }
 
 
-        if(Random.Range(0, 9) % 2 == 0){
-            string[] biome = { "Cliff", "Rock", "Plate"};
-            string[] rock_type = { "basic", "blank", "desert", "fancy", "forest", "ice", "infernal", "snow", "white"};
-
-
-            GameObject tmp_go = Resources.Load ("Stylized Rock Pack - 8 styles, 3 shapes, LODs, PBR/Prefabs/"+biome[Random.Range(0, 3)]+"_"+rock_type[Random.Range(0, 9)]) as GameObject;
-            Instantiate(tmp_go, rlg.getRandomLocation(), Quaternion.identity);
-        }
+        // if(Random.Range(0, 9) % 2 == 0){
+        //     string[] biome = { "Cliff", "Rock", "Plate"};
+        //     string[] rock_type = { "basic", "blank", "desert", "fancy", "forest", "ice", "infernal", "snow", "white"};
+        //     GameObject tmp_go = Resources.Load ("Stylized Rock Pack - 8 styles, 3 shapes, LODs, PBR/Prefabs/"+biome[Random.Range(0, 3)]+"_"+rock_type[Random.Range(0, 9)]) as GameObject;
+        //     Instantiate(tmp_go, rlg.getRandomLocation(), Quaternion.identity);
+        // }
     }
 
     private void floorGenerator(){
