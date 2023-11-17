@@ -1,3 +1,5 @@
+//Taken from https://github.com/z3nth10n/Infinite-Terrain/tree/master
+
 /*
 	Perlin simplex noise algo
 */

@@ -30,7 +30,8 @@ public class RandomMapCreator : MonoBehaviour{
         plane.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         plane.transform.position = location;
 
-        Texture2D myTexture = Resources.Load ("Almgp_grassyTerrain/Models/MESHes/Materials/diffuse_x0_y0") as Texture2D;
+        // Texture2D myTexture = Resources.Load ("Almgp_grassyTerrain/Models/MESHes/Materials/diffuse_x0_y0") as Texture2D;
+        Texture2D myTexture = Resources.Load ("Textures/terrainFloor") as Texture2D;
         plane.GetComponent<Renderer>().material.mainTexture = myTexture;
 
 
