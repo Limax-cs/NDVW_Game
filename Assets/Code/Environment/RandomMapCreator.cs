@@ -5,6 +5,7 @@ using UnityEngine;
 public class RandomMapCreator : MonoBehaviour{
     //
     public int sideLength = 3;
+    private List<GameObject> planes;
 
     //
     // private RandomLocationGenerator rgl = null;
@@ -12,13 +13,25 @@ public class RandomMapCreator : MonoBehaviour{
     // Start is called before the first frame update
     void Start()
     {   
+        planes = new List<GameObject>();
         floorGenerator();
+        StartCoroutine(SetRandomTextureOnTerrain());
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    IEnumerator SetRandomTextureOnTerrain() {
         
+        yield return new WaitForSeconds(5);
+        
+        string[] biome = { "Black_Sand", "Grass_A", "Grass_B", "Grass_Dry", "Grass_Moss", "Grass_Soil", "Heather", "Muddy", "Pebbles_A", "Pebbles_B", "Pebbles_C", "Rock", "Sand", "Snow", "Soil_Rocks", "Tidal_Pools"};
+        Texture2D myTexture = Resources.Load ("TerrainSampleAssets/Textures/Terrain/"+biome[Random.Range(0, 16)]+"_BaseColor") as Texture2D;
+        foreach (GameObject plane in planes){ plane.GetComponent<Renderer>().material.mainTexture = myTexture; }
+        
+        StartCoroutine(SetRandomTextureOnTerrain());
     }
 
     private void tileGenerator(Vector3 location, int type){
@@ -34,9 +47,11 @@ public class RandomMapCreator : MonoBehaviour{
         Texture2D myTexture = Resources.Load ("Textures/terrainFloor") as Texture2D;
         plane.GetComponent<Renderer>().material.mainTexture = myTexture;
 
+        planes.Add(plane);
+
 
         // Get the planes vertices
-            float detailScale = 1;
+            float detailScale = 3.0f;
             float heightScale = 0.5f;
             float buffer = 1; // (buffer * 2 + 1)^2 will be total number of planes in the scene at any one time
             float planeSize  = 10f / buffer;
