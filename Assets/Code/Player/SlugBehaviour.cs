@@ -21,6 +21,8 @@ public class SlugBehaviour : MonoBehaviour
     private float fallSpeed = 0;
     public float InAirFriction = 0.995f;
     public float InertiaContribution = 0.9f;
+    public float CoyoteTime = 0.2f;
+    public float coyoteCounter = 0f;
 
     //public bool isOnSlope = false;
     public Vector3 hitnormal;
@@ -68,16 +70,18 @@ public class SlugBehaviour : MonoBehaviour
 
     void Update()
     {
+        
+    }
+
+    void FixedUpdate()
+    {
         //Detecció dels controls
         //RigAimDirection.weight = 1;
         horizontalMove = Input.GetAxis("Horizontal");
         verticalMove = Input.GetAxis("Vertical");
         mouseX = Input.GetAxis("Mouse X");
         mouseY = Input.GetAxis("Mouse Y");
-    }
-
-    void FixedUpdate()
-    {
+        
         if (!isDefeated)
         {
 
@@ -103,25 +107,7 @@ public class SlugBehaviour : MonoBehaviour
             CamDirection();
             movePlayer = playerInput.x * camRight + playerInput.z * camForward;
             Vector3 forwardSlug = player.transform.position + (playerInput.z + playerInput.x * playerInput.x) * camForward;
-            //Debug.Log("Cam Forward: " + camForward + " |  player Rotation: " + player.transform.forward + " | normal : " + normalDirection);
-            //Vector3 axisSlug = forwardSlug - player.transform.location;
-            //axisSlug = axisSlug * Vector3.AngleAxis(90 - Vector3.Angle(normalDirection, axisSlug), Vector3.Cross(normalDirection, axisSlug));
-            //forwardSlug.rotation = forwardSlug.rotation * Quaternion.AngleAxis(Vector3.Angle(normalDirection, player.transform.up), Vector3.Cross(normalDirection, player.transform.up));
             player.transform.LookAt(forwardSlug);
-            //Debug.Log(" |  player Rotation: " + player.transform.forward);
-            //player.transform.rotation = player.transform.rotation * Quaternion.AngleAxis(Vector3.Angle(normalDirection, player.transform.up), Vector3.Cross(normalDirection, player.transform.up));
-            /*
-            if (terrainHitTimer > 0)
-            {
-                player.transform.LookAt(player.transform.position + (playerInput.z + playerInput.x * playerInput.x) * camForward);
-                player.transform.rotation = player.transform.rotation * Quaternion.AngleAxis(Vector3.Angle(normalDirection, player.transform.up), Vector3.Cross(normalDirection, player.transform.up));
-            }
-            else
-            {
-                player.transform.LookAt(player.transform.position + (playerInput.z + playerInput.x * playerInput.x) * camForward);
-            }*/
-            
-
             
 
             //Velocitat del jugador
@@ -193,11 +179,21 @@ public class SlugBehaviour : MonoBehaviour
     //Habilitats del jugador
     public void SlugSkills()
     {
+        if (player.isGrounded)
+        {
+            coyoteCounter = CoyoteTime;
+        }
+        else if (coyoteCounter > 0)
+        {
+            coyoteCounter -= Time.deltaTime;
+        }
+
         //Salts
-        if(player.isGrounded && Input.GetButtonDown("Jump"))
+        if((coyoteCounter > 0) && Input.GetButtonDown("Jump"))
         {
             fallSpeed = JumpForce;
             movePlayer.y = fallSpeed;
+            coyoteCounter = 0;
         }
     }
 
