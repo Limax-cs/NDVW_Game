@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class RandomMapCreator : MonoBehaviour{
     
-    public int sideLength = 40;
-    public int biomeLength = 10;
+    public int sideLength = 120;
+    public int biomeLength = 40;
 
     // private RandomLocationGenerator rgl = null;
 
@@ -48,13 +48,16 @@ public class RandomMapCreator : MonoBehaviour{
         switch (biomeType)
         {
             case BiomeType.Forest:
-                myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
+                myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Grass_Moss_BaseColor") as Texture2D;
                 break;
             case BiomeType.Desert:
-                myTexture = Resources.Load("Texture/terrainFloor") as Texture2D;
+                myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Sand_BaseColor") as Texture2D;
                 break;
             case BiomeType.Rocky:
-                myTexture = Resources.Load("Texture/terrainFloor") as Texture2D;
+                myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Rock_BaseColor") as Texture2D;
+                break;
+            case BiomeType.Snowy:
+                myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Snow_BaseColor") as Texture2D;
                 break;
             case BiomeType.Empty:
                 myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
