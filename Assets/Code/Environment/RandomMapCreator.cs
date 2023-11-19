@@ -177,20 +177,4 @@ public class RandomMapCreator : MonoBehaviour{
         }
     }
 
-    public enum BiomeType
-    {
-        Empty,
-        Forest,
-        Desert,
-        Rocky,
-    }
-
-    public enum TileType
-    {
-        Empty,
-        Tree,
-        Pine,
-        Grass,
-        Rocks
-    }
 }
