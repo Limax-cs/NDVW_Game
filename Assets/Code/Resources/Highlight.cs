@@ -9,6 +9,9 @@ public class Highlight : MonoBehaviour
 
     [SerializeField]
     private Color color = Color.white;
+    public Color emissionColor;
+    public Texture emissionTexture;
+    public bool emissionEnable;
 
     private List<Material> materials;
 
@@ -19,23 +22,32 @@ public class Highlight : MonoBehaviour
         {
             materials.AddRange(new List<Material>(GetComponent<Renderer>().materials));
         }
+
     }
 
     public void ToggleHighLight(bool val)
     {
         if (val)
         {
-            foreach (var material in materials)
+            for (int i= 0; i < materials.Count; i++)
             {
-                material.EnableKeyword("_EMISSION");
-                material.SetColor("_EmissionColor", color);
+                materials[i].EnableKeyword("_EMISSION");
+                materials[i].SetColor("_EmissionColor", color);
+                materials[i].SetTexture("_EmissionMap", null);
             }
         }
         else
         {
-            foreach (var material in materials)
+            for (int i= 0; i < materials.Count; i++)
             {
-                material.DisableKeyword("_EMISSION");
+                if  (!emissionEnable)
+                {
+                    materials[i].DisableKeyword("_EMISSION");
+                }
+
+                materials[i].SetColor("_EmissionColor", emissionColor);
+                materials[i].SetTexture("_EmissionMap", emissionTexture);
+                
             }
         }
     }

@@ -8,6 +8,14 @@ TagManager:
   - SaltBullet
   - DirectSaltBullet
   - Terrain
+  - X
+  - Y
+  - Z
+  - W
+  - spaceship1
+  - spaceship2
+  - spaceship1_item
+  - spaceship2_item
   layers:
   - Default
   - TransparentFX

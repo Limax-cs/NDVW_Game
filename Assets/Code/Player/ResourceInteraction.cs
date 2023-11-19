@@ -103,12 +103,15 @@ public class ResourceInteraction : MonoBehaviour
 
     private void Drop()
     {
-        backpack[indexItem].transform.SetParent(null);
-        backpack[indexItem] = null;
-        Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
-        if (rb != null)
+        if (backpack[indexItem] is not null)
         {
-            rb.isKinematic = false;
+            backpack[indexItem].transform.SetParent(null);
+            backpack[indexItem] = null;
+            Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = false;
+            }
         }
         
     }
@@ -153,6 +156,8 @@ public class ResourceInteraction : MonoBehaviour
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = true;
             backpack[item].GetComponent<Collider>().GetComponent<Highlight>()?.ToggleHighLight(false);
+            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
+            nm.enabled = true;
         }
     }
 
@@ -164,6 +169,9 @@ public class ResourceInteraction : MonoBehaviour
             mr.enabled = false;
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = false;
+            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
+            nm.enabled = false;
+            
         }
     }
 }

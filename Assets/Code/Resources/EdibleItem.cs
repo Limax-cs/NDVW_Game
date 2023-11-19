@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EdibleItem : MonoBehaviour
 {
+    public Texture2D icon;
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class StatusUI : MonoBehaviour
 {
     public List<Image> slots = new List<Image>(9);
-    public List<Image> items = new List<Image>(9);
+    public List<RawImage> items = new List<RawImage>(9);
     private int itemIndex = 4;
 
     // Start is called before the first frame update
@@ -49,9 +49,30 @@ public class StatusUI : MonoBehaviour
         for (int i = 0; i < items_list.Count; i++)
         {
             if (items_list[i] == null)
-                items[i].enabled = false;
+            {
+                items[i].enabled = false;   
+            }
             else
+            {
                 items[i].enabled = true;
+
+                ObjectItem objectItem = items_list[i].GetComponent<ObjectItem>();
+                EdibleItem edibleItem = items_list[i].GetComponent<EdibleItem>();
+                WeaponItem weaponItem = items_list[i].GetComponent<WeaponItem>();
+
+                if (objectItem != null){
+                    if (objectItem.icon != null)
+                        items[i].texture = objectItem.icon;
+                }
+                else if (edibleItem != null){
+                    if (edibleItem.icon != null)
+                        items[i].texture = edibleItem.icon;
+                }
+                else if (weaponItem != null){
+                    if (weaponItem.icon != null)
+                        items[i].texture = weaponItem.icon;
+                }
+            }
         }
 
         // Index
