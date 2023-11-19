@@ -25,12 +25,11 @@ public class RandomMapCreator : MonoBehaviour{
 
     IEnumerator SetRandomTextureOnTerrain() {
         
-        yield return new WaitForSeconds(5);
-        
         string[] biome = { "Black_Sand", "Grass_A", "Grass_B", "Grass_Dry", "Grass_Moss", "Grass_Soil", "Heather", "Muddy", "Pebbles_A", "Pebbles_B", "Pebbles_C", "Rock", "Sand", "Snow", "Soil_Rocks", "Tidal_Pools"};
         Texture2D myTexture = Resources.Load ("TerrainSampleAssets/Textures/Terrain/"+biome[Random.Range(0, 16)]+"_BaseColor") as Texture2D;
         foreach (GameObject plane in planes){ plane.GetComponent<Renderer>().material.mainTexture = myTexture; }
         
+        yield return new WaitForSeconds(5);
         StartCoroutine(SetRandomTextureOnTerrain());
     }
 
@@ -44,9 +43,10 @@ public class RandomMapCreator : MonoBehaviour{
         plane.transform.position = location;
 
         // Texture2D myTexture = Resources.Load ("Almgp_grassyTerrain/Models/MESHes/Materials/diffuse_x0_y0") as Texture2D;
-        Texture2D myTexture = Resources.Load ("Textures/terrainFloor") as Texture2D;
-        plane.GetComponent<Renderer>().material.mainTexture = myTexture;
-
+        // Texture2D myTexture = Resources.Load ("Textures/terrainFloor") as Texture2D;
+        // Texture2D myTexture = Resources.Load ("TerrainSampleAssets/Textures/Terrain/Black_Sand_TerrainLayer") as Texture2D;
+        // plane.GetComponent<Renderer>().material.mainTexture = myTexture;ç
+        
         planes.Add(plane);
 
 
