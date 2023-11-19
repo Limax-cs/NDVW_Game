@@ -8,7 +8,6 @@ public class RandomMapCreator : MonoBehaviour{
     public int sideLength = 40;
     public int biomeLength = 10;
 
-
     // private RandomLocationGenerator rgl = null;
 
     // Start is called before the first frame update
@@ -42,7 +41,6 @@ public class RandomMapCreator : MonoBehaviour{
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         plane.transform.position = location;
-
 
         Texture2D myTexture;
 
