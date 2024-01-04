@@ -4,5 +4,6 @@ public enum TileType
     Tree,
     Pine,
     Grass,
-    Rocks
+    Rocks,
+    Crystal,
 }

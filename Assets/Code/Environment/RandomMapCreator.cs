@@ -161,6 +161,36 @@ public class RandomMapCreator : MonoBehaviour
                 Instantiate(tmp_go, rlg.getRandomLocation(), Quaternion.identity);
             }
         }
+        else if (tileType == TileType.Crystal)
+        {
+            GameObject crystalPrefab = null;
+            switch (biomeType)
+            {
+                case BiomeType.Forest:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/BlueCrystal00") as GameObject; 
+                    break;
+                case BiomeType.Desert:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/RedCrystal08") as GameObject;
+                    break;
+                case BiomeType.Rocky:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/GemStone00") as GameObject; 
+                    break;
+                case BiomeType.Snowy:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/PurpCrystal00") as GameObject;
+                    break;
+            }
+
+            if (crystalPrefab != null)
+            {
+                int numberOfCrystals = 4; 
+                for (int i = 0; i < numberOfCrystals; i++)
+                {
+                    Instantiate(crystalPrefab, rlg.getRandomLocation(), Quaternion.identity);
+                }
+            }
+        }
+
+
     }
 
     private BiomeType[,] GenerateRandomBiomeMap(int sideLength, int biomeLength)
