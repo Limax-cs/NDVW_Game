@@ -4,17 +4,12 @@ public class CollectibleItem : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("Crystal touched by: " + other.name);
+        //Destroy(gameObject);
         if (other.CompareTag("Player")) // Assuming your player GameObject is tagged as "Player"
         {
-            Collect();
+            Debug.Log("Crystal touched by: " + other.name);
+            Destroy(gameObject);
         }
-    }
-
-    void Collect()
-    {
-        // Here you can add logic to update the player's inventory or score
-
-        // Destroy the crystal GameObject
-        Destroy(gameObject);
     }
 }
