@@ -58,18 +58,30 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 53c99f530c589ab43a9650c399ee61b0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1136421311097835892}
+      addedObject: {fileID: 2627639981664297143}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 53c99f530c589ab43a9650c399ee61b0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2627639981664297143}
+      addedObject: {fileID: 882095921157606803}
   m_SourcePrefab: {fileID: 100100000, guid: 53c99f530c589ab43a9650c399ee61b0, type: 3}
 --- !u!1 &6399045991906982036 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 53c99f530c589ab43a9650c399ee61b0, type: 3}
   m_PrefabInstance: {fileID: 6399045991907016244}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &1136421311097835892
-MeshCollider:
+--- !u!114 &2627639981664297143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6399045991906982036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d001340744eca4ef3823caf1646f4e1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &882095921157606803
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -86,19 +98,6 @@ MeshCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 53c99f530c589ab43a9650c399ee61b0, type: 3}
---- !u!114 &2627639981664297143
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6399045991906982036}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d001340744eca4ef3823caf1646f4e1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  serializedVersion: 3
+  m_Radius: 0.122765854
+  m_Center: {x: -0.02410531, y: -6.352745e-23, z: 0.00000001192093}

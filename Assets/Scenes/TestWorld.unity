@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.67936057, g: 0.73288685, b: 0.8046859, a: 1}
+  m_IndirectSpecularColor: {r: 0.6793593, g: 0.73288894, b: 0.8046863, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4278,6 +4278,7 @@ GameObject:
   - component: {fileID: 963194226}
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
+  - component: {fileID: 963194231}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4398,6 +4399,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resWidth: 1920
   resHeight: 1080
+--- !u!114 &963194231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d52024c7afa4b947ba994973bb4767c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sideLength: 120
+  biomeLength: 40
 --- !u!1 &983693068
 GameObject:
   m_ObjectHideFlags: 0

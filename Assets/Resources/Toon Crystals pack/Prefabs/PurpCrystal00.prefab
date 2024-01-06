@@ -13,6 +13,18 @@ PrefabInstance:
       value: PurpCrystal00
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 42.112278
       objectReference: {fileID: 0}
@@ -61,7 +73,7 @@ PrefabInstance:
       addedObject: {fileID: -8584597534111690366}
     - targetCorrespondingSourceObject: {fileID: 100000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7839511028567468689}
+      addedObject: {fileID: 3176064233463542202}
   m_SourcePrefab: {fileID: 100100000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
 --- !u!1 &3444529995215164703 stripped
 GameObject:
@@ -80,8 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d001340744eca4ef3823caf1646f4e1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!64 &-7839511028567468689
-MeshCollider:
+--- !u!135 &3176064233463542202
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -98,7 +110,6 @@ MeshCollider:
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
+  serializedVersion: 3
+  m_Radius: 0.17617556
+  m_Center: {x: -0.030504685, y: -2.6241928e-17, z: 0.108648926}

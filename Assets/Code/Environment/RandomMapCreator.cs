@@ -182,11 +182,25 @@ public class RandomMapCreator : MonoBehaviour
 
             if (crystalPrefab != null)
             {
-                int numberOfCrystals = 4; 
+                int numberOfCrystals = 4;
                 for (int i = 0; i < numberOfCrystals; i++)
                 {
-                    Instantiate(crystalPrefab, rlg.getRandomLocation(), Quaternion.identity);
-                }
+                    GameObject crystalInstance = Instantiate(crystalPrefab, rlg.getRandomLocation(), Quaternion.identity);
+
+                    // Randomize scale
+                    float randomScaleFactor = UnityEngine.Random.Range(3.0f, 4.0f); // Adjust the range as needed
+                    crystalInstance.transform.localScale = new Vector3(randomScaleFactor, randomScaleFactor, randomScaleFactor);
+
+                    // Randomize rotation
+                    float randomRotationX = UnityEngine.Random.Range(0, 360);
+                    float randomRotationY = UnityEngine.Random.Range(0, 360);
+                    float randomRotationZ = UnityEngine.Random.Range(0, 360);
+                    crystalInstance.transform.rotation = Quaternion.Euler(randomRotationX, randomRotationY, randomRotationZ);
+
+                    float liftHeight = 0.02f * randomScaleFactor; // Adjust this value as needed
+                    crystalInstance.transform.position += new Vector3(0, liftHeight, 0);
+                
+            }
             }
         }
 
