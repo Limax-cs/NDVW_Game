@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.AI; // For navigation
+using UnityEngine.AI;
 
 public class ScentDetector : MonoBehaviour
 {
@@ -22,7 +22,7 @@ public class ScentDetector : MonoBehaviour
             if (scent != null)
             {
                 MoveTowardsScent(scent.transform.position);
-                break; // Assuming you want to react to the first scent detected
+                break; 
             }
         }
     }
