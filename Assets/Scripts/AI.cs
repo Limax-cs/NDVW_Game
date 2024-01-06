@@ -7,15 +7,16 @@ public class AI : MonoBehaviour {
 
     NavMeshAgent agent;
     Animator anim;
-    State currentState;
+    DragonState currentState;
 
     public Transform player;
 
     void Start() {
 
-        agent = GetComponent<NavMeshAgent>();
+        // agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
-        currentState = new Idle(gameObject, agent, anim, player);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        currentState = new DragonIdle(gameObject, anim, player);
         Debug.Log("Start State: "+ currentState);
     }
 
@@ -24,5 +25,11 @@ public class AI : MonoBehaviour {
 
         currentState = currentState.Process();
         Debug.Log("Update State: "+ currentState);
+
+        if (currentState == null)
+        {
+            Debug.LogError("There is no current state!");
+            return;
+        }
     }
 }
