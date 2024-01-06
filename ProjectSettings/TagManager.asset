@@ -4,18 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - SlimedSaltBullet
-  - SaltBullet
-  - DirectSaltBullet
   - Terrain
-  - X
-  - Y
-  - Z
-  - W
   - spaceship1
   - spaceship2
   - spaceship1_item
   - spaceship2_item
+  - explorable
+  - mole
+  - weapon
+  - consumable
   layers:
   - Default
   - TransparentFX
