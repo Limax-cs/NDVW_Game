@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using System.Diagnostics;
+using System.Collections.Specialized;
 
 public class RandomMapCreator : MonoBehaviour
 {
 
     public int sideLength = 120;
     public int biomeLength = 40;
+    private float[,] noiseMap;
+    private Dictionary<BiomeType, float> biomeHeightMultipliers;
+    public List<GameObject> tiles;
 
     // private RandomLocationGenerator rgl = null;
 
@@ -17,7 +21,12 @@ public class RandomMapCreator : MonoBehaviour
     {
         //planes = new List<GameObject>();
         //StartCoroutine(SetRandomTextureOnTerrain());
-        floorGeneratorWithBiomes();
+        noiseMap = GenerateNoiseMap(sideLength);
+        UnityEngine.Debug.Log(noiseMap.Length);
+        //UnityEngine.Debug.Log(noiseMap[0].Length);
+        biomeHeightMultipliers = GetBiomeHeightMultipliers();
+        floorGeneratorWithBiomes(noiseMap, biomeHeightMultipliers);
+        CombineTiles();
     }
 
     // Update is called once per frame
@@ -25,62 +34,89 @@ public class RandomMapCreator : MonoBehaviour
     {
     }
 
-    //IEnumerator SetRandomTextureOnTerrain() {
+    void CombineTiles()
+    {
+        MeshFilter[] meshFilters = new MeshFilter[tiles.Count];
+        CombineInstance[] combine = new CombineInstance[tiles.Count];
 
-    //    string[] biome = { "Black_Sand", "Grass_A", "Grass_B", "Grass_Dry", "Grass_Moss", "Grass_Soil", "Heather", "Muddy", "Pebbles_A", "Pebbles_B", "Pebbles_C", "Rock", "Sand", "Snow", "Soil_Rocks", "Tidal_Pools"};
-    //    Texture2D myTexture = Resources.Load ("TerrainSampleAssets/Textures/Terrain/"+biome[Random.Range(0, 16)]+"_BaseColor") as Texture2D;
-    //    foreach (GameObject plane in planes){ plane.GetComponent<Renderer>().material.mainTexture = myTexture; }
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            meshFilters[i] = tiles[i].GetComponent<MeshFilter>();
+            combine[i].mesh = meshFilters[i].sharedMesh;
+            combine[i].transform = meshFilters[i].transform.localToWorldMatrix;
+            Destroy(tiles[i]); // Optionally destroy individual tiles after combining
+        }
 
-    //    yield return new WaitForSeconds(5);
-    //    StartCoroutine(SetRandomTextureOnTerrain());
-    //}
+        // Create a new GameObject to hold the combined mesh (your entire terrain)
+        GameObject combinedTerrain = new GameObject("CombinedTerrain");
+        combinedTerrain.AddComponent<MeshFilter>();
+        combinedTerrain.AddComponent<MeshRenderer>();
 
-    private void tileGenerator(Vector3 location, TileType tileType, BiomeType biomeType)
+        // Assign the combined mesh to the new GameObject
+        combinedTerrain.GetComponent<MeshFilter>().mesh = new Mesh();
+        combinedTerrain.GetComponent<MeshFilter>().mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+        combinedTerrain.GetComponent<MeshFilter>().mesh.CombineMeshes(combine);
+
+        // Optionally, add a MeshCollider if needed for collision detection
+        combinedTerrain.AddComponent<MeshCollider>().sharedMesh = combinedTerrain.GetComponent<MeshFilter>().mesh;
+
+        // Set position, rotation, and scale of the combined terrain as needed
+        combinedTerrain.transform.position = Vector3.zero;
+        combinedTerrain.transform.rotation = Quaternion.identity;
+        combinedTerrain.transform.localScale = Vector3.one;
+    }
+
+    private Dictionary<BiomeType, float> GetBiomeHeightMultipliers()
+    {
+        Dictionary<BiomeType, float> multipliers = new Dictionary<BiomeType, float>();
+        multipliers[BiomeType.Forest] = 4.5f;
+        multipliers[BiomeType.Desert] = 0.8f;
+        multipliers[BiomeType.Rocky] = 17.5f;
+        multipliers[BiomeType.Empty] = 1.0f;
+        multipliers[BiomeType.Snowy] = 3.5f;
+
+        return multipliers;
+    }
+
+    private void tileGenerator(Vector3 location, TileType tileType, BiomeType biomeType, float globalHeight, float biomeMultiplier)
     {
 
         RandomLocationGenerator rlg = new RandomLocationGenerator(location);
 
-        // Create the tile
+        // Create the tileff
         GameObject plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         plane.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         plane.transform.position = location;
 
         Texture2D myTexture;
 
-        float detailScale = 0.0f;
-        float heightScale = 0.0f;
+        float heightMultiplier = 1.0f;
 
         // Assign textures based on biomeType
         switch (biomeType)
         {
             case BiomeType.Forest:
-                detailScale = 1.0f;
-                heightScale = 4.0f;
+                heightMultiplier = 2.5f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Grass_Moss_BaseColor") as Texture2D;
                 break;
             case BiomeType.Desert:
-                detailScale = 2.0f;
-                heightScale = 0.8f;
+                heightMultiplier = 1.0f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Sand_BaseColor") as Texture2D;
                 break;
             case BiomeType.Rocky:
-                detailScale = 3.0f;
-                heightScale = 1.5f;
+                heightMultiplier = 3.0f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Rock_BaseColor") as Texture2D;
                 break;
             case BiomeType.Snowy:
-                detailScale = 1.0f;
-                heightScale = 1.5f;
+                heightMultiplier = 2.5f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Snow_BaseColor") as Texture2D;
                 break;
             case BiomeType.Empty:
-                detailScale = 1.0f;
-                heightScale = 1.0f;
+                heightMultiplier = 1.0f;
                 myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
                 break;
             default:
-                detailScale = 1.0f;
-                heightScale = 1.0f;
+                heightMultiplier = 1.0f;
                 myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
                 break;
         }
@@ -89,45 +125,63 @@ public class RandomMapCreator : MonoBehaviour
 
 
         // Get the planes vertices
-        //float detailScale = 3.0f;
-        //float heightScale = 0.5f;
-
         Mesh mesh = plane.GetComponent<MeshFilter>().mesh;
         Vector3[] vertices = mesh.vertices;
-        int sideLength = (int)Mathf.Sqrt(vertices.Length);
+        //int sideLength = (int)Mathf.Sqrt(vertices.Length);
         float planeSize = 10f;
 
-        float[,] heightMap = new float[sideLength, sideLength];
-
-        for (int i = 0; i < sideLength; i++)
+        for (int v = 0; v < vertices.Length; v++)
         {
-            for (int j = 0; j < sideLength; j++)
-            {
-                Vector3 vertexPosition = plane.transform.TransformPoint(vertices[i * sideLength + j]) * planeSize / 10f;
-                heightMap[i, j] = SimplexNoise.Noise(vertexPosition.x, vertexPosition.z);
-            }
-        }
+            // generate the height for the current vertex
+            Vector3 vertexPosition = plane.transform.position + vertices[v] * planeSize / 10f;
+            //float height = SimplexNoise.Noise(vertexPosition.x, vertexPosition.z);
+            // Get the position of the plane relative to the noise map
+            int noiseMapX = Mathf.FloorToInt((location.x + sideLength / 2f) / 10f);
+            int noiseMapZ = Mathf.FloorToInt((location.z + sideLength / 2f) / 10f);
 
-        SmoothHeightMap(heightMap, 5); // Adjust the number of iterations as needed
+            // Ensure the noise map indices are within bounds
+            noiseMapX = Mathf.Clamp(noiseMapX, 0, sideLength - 1);
+            noiseMapZ = Mathf.Clamp(noiseMapZ, 0, sideLength - 1);
 
-        for (int i = 0; i < sideLength; i++)
-        {
-            for (int j = 0; j < sideLength; j++)
-            {
-                vertices[i * sideLength + j].y = CalculateHeight(heightMap, i, j, sideLength, heightScale);
-            }
+            // Get the height from the noise map using the calculated indices
+            float height = noiseMap[noiseMapZ, noiseMapX]; // Swapped Z and X here as noiseMap is [Z,X]
+
+            vertices[v].y = height * heightMultiplier;
         }
 
         mesh.vertices = vertices;
         mesh.RecalculateBounds();
         mesh.RecalculateNormals();
 
+        //for (int i = 0; i < sideLength; i++)
+        //{
+        //    for (int j = 0; j < sideLength; j++)
+        //    {
+        //        Vector3 vertexPosition = plane.transform.TransformPoint(vertices[i * sideLength + j]) * planeSize / 10f;
+        //        float height = noiseMap[(int)(vertexPosition.z + sideLength / 2), (int)(vertexPosition.x + sideLength / 2)];
+        //        height = globalHeight * biomeMultiplier;
+
+        //        Vector3 vertex = vertices[i * sideLength + j];
+        //        vertices[i * sideLength + j] = new Vector3(vertex.x, height, vertex.z);
+        //    }
+        //}
+
+        //SmoothHeightMap(vertices, sideLength, sideLength, 2); // Adjust the number of iterations as needed
+
+        //mesh.vertices = vertices;
+        //mesh.RecalculateBounds();
+        //mesh.RecalculateNormals();
+        //UpdateMeshVerticesHeights(heightMap, mesh, vertices, heightMultiplier);
+        
+        //UpdateMeshVerticesHeights(heightMap, mesh, vertices, heightMultiplier);
+
         plane.AddComponent<MeshCollider>();
+        tiles.Add(plane);
 
         // Create the objects in the tile based on type parameter
         if (tileType == TileType.Empty)
-        { // Empty tile, just texture added.
-
+        {
+            // Empty tile, just texture added.
         }
         else if (tileType == TileType.Tree)
         {
@@ -163,6 +217,65 @@ public class RandomMapCreator : MonoBehaviour
         }
     }
 
+    private void UpdateMeshVerticesHeights(float[,] heightMap, Mesh mesh, Vector3[] meshVertices, float heightMultiplier)
+    {
+        int tileDepth = heightMap.GetLength(0);
+        int tileWidth = heightMap.GetLength(1);
+
+        // iterate through all the heightMap coordinates, updating the vertex index
+        int vertexIndex = 0;
+        for (int zIndex = 0; zIndex < tileDepth; zIndex++)
+        {
+            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
+            {
+                float height = heightMap[zIndex, xIndex];
+
+                Vector3 vertex = meshVertices[vertexIndex];
+                // change the vertex Y coord, proportional to the height value
+                meshVertices[vertexIndex] = new Vector3(vertex.x, height * heightMultiplier, vertex.z);
+
+                vertexIndex++;
+            }
+        }
+
+        //update the vertices in the mesh and update its properties
+        mesh.vertices = meshVertices;
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
+    }
+
+    private float[,] GenerateNoiseMap(int sideLength)
+    {
+        float[,] noiseMap = new float[sideLength, sideLength];
+        for (int i = 0; i < sideLength; i++)
+        {
+            for (int j = 0; j < sideLength; j++)
+            {
+                noiseMap[i, j] = SimplexNoise.Noise(i * 0.1f, j * 0.1f);
+            }
+        }
+
+        return noiseMap;
+    }
+
+    public float[,] GenerateNoiseMap2(int mapDepth, int mapWidth, float scale)
+    {
+        float[,] noiseMap = new float[mapDepth, mapWidth];
+        for (int zIndex = 0; zIndex < mapDepth; zIndex++)
+        {
+            for (int xIndex = 0; xIndex < mapWidth; xIndex++)
+            {
+                // calculate sample indices based on the coordinates and the scale
+                float sampleX = xIndex / scale;
+                float sampleZ = zIndex / scale;
+                // generate noise value using PerlinNoise
+                float noise = Mathf.PerlinNoise(sampleX, sampleZ);
+                noiseMap[zIndex, xIndex] = noise;
+            }
+        }
+        return noiseMap;
+    }
+
     private BiomeType[,] GenerateRandomBiomeMap(int sideLength, int biomeLength)
     {
         BiomeType[,] biomeMap = new BiomeType[sideLength, sideLength];
@@ -185,7 +298,8 @@ public class RandomMapCreator : MonoBehaviour
 
         return biomeMap;
     }
-    private void floorGeneratorWithBiomes()
+
+    private void floorGeneratorWithBiomes(float[,] noiseMap, Dictionary<BiomeType, float> biomeMultipliers)
     {
         System.Random random = new System.Random();
 
@@ -200,69 +314,76 @@ public class RandomMapCreator : MonoBehaviour
             {
                 BiomeType currentBiome = biomeMap[z_i, x_i];
                 tileGenerator(
-                    new Vector3(10f * (x_i - sideLength / 2), 0,
-                    10f * (z_i - sideLength / 2)),
+                    new Vector3(10f * (x_i - sideLength / 2), 0, 10f * (z_i - sideLength / 2)),
                     (TileType)random.Next(Enum.GetNames(typeof(TileType)).Length),
-                    currentBiome);
+                    currentBiome,
+                    noiseMap[z_i, x_i],
+                    biomeMultipliers[currentBiome]);
             }
         }
     }
 
-    private float BilinearInterpolation(float[,] heightMap, float x, float z, int sideLength)
+    //private float BilinearInterpolation(float[,] heightMap, float x, float z, int sideLength)
+    //{
+    //    int x0 = Mathf.Clamp((int)x, 0, sideLength - 1);
+    //    int x1 = Mathf.Clamp(x0 + 1, 0, sideLength - 1);
+    //    int z0 = Mathf.Clamp((int)z, 0, sideLength - 1);
+    //    int z1 = Mathf.Clamp(z0 + 1, 0, sideLength - 1);
+
+    //    float sx = x - x0;
+    //    float sz = z - z0;
+
+    //    float h00 = heightMap[x0, z0];
+    //    float h01 = heightMap[x0, z1];
+    //    float h10 = heightMap[x1, z0];
+    //    float h11 = heightMap[x1, z1];
+
+    //    float height = Mathf.Lerp(Mathf.Lerp(h00, h10, sx), Mathf.Lerp(h01, h11, sx), sz);
+    //    return height;
+    //}
+
+    //private float CalculateHeight(float[,] heightMap, int x, int z, int sideLength, float heightScale)
+    //{
+    //    float height = BilinearInterpolation(heightMap, x, z, sideLength);
+    //    return height * heightScale;
+    //}
+
+    private void SmoothHeightMap(Vector3[] vertices, int width, int height, int iterations)
     {
-        int x0 = Mathf.Clamp((int)x, 0, sideLength - 1);
-        int x1 = Mathf.Clamp(x0 + 1, 0, sideLength - 1);
-        int z0 = Mathf.Clamp((int)z, 0, sideLength - 1);
-        int z1 = Mathf.Clamp(z0 + 1, 0, sideLength - 1);
-
-        float sx = x - x0;
-        float sz = z - z0;
-
-        float h00 = heightMap[x0, z0];
-        float h01 = heightMap[x0, z1];
-        float h10 = heightMap[x1, z0];
-        float h11 = heightMap[x1, z1];
-
-        float height = Mathf.Lerp(Mathf.Lerp(h00, h10, sx), Mathf.Lerp(h01, h11, sx), sz);
-        return height;
-    }
-
-    private float CalculateHeight(float[,] heightMap, int x, int z, int sideLength, float heightScale)
-    {
-        float height = BilinearInterpolation(heightMap, x, z, sideLength);
-        return height * heightScale;
-    }
-
-    private void SmoothHeightMap(float[,] heightMap, int iterations)
-    {
-        int width = heightMap.GetLength(0);
-        int height = heightMap.GetLength(1);
-
         for (int iter = 0; iter < iterations; iter++)
         {
-            float[,] smoothedMap = new float[width, height];
+            Vector3[] smoothedVertices = new Vector3[vertices.Length];
 
-            for (int x = 1; x < width - 1; x++)
+            for (int i = 0; i < vertices.Length; i++)
             {
-                for (int y = 1; y < height - 1; y++)
-                {
-                    float avg = (
-                        heightMap[x - 1, y - 1] + heightMap[x - 1, y] + heightMap[x - 1, y + 1] +
-                        heightMap[x, y - 1] + heightMap[x, y] + heightMap[x, y + 1] +
-                        heightMap[x + 1, y - 1] + heightMap[x + 1, y] + heightMap[x + 1, y + 1]
-                    ) / 9.0f;
+                int adjacentVertices = 0;
+                Vector3 averageVertex = Vector3.zero;
 
-                    smoothedMap[x, y] = avg;
+                int x = i % width;
+                int y = i / width;
+
+                for (int dx = -1; dx <= 1; dx++)
+                {
+                    for (int dy = -1; dy <= 1; dy++)
+                    {
+                        int nx = x + dx;
+                        int ny = y + dy;
+
+                        if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+                        {
+                            adjacentVertices++;
+                            averageVertex += vertices[ny * width + nx];
+                        }
+                    }
                 }
+
+                smoothedVertices[i] = averageVertex / adjacentVertices;
             }
 
-            // Update the original height map with the smoothed values
-            for (int x = 0; x < width; x++)
+            // Update the original vertices with the smoothed values
+            for (int i = 0; i < vertices.Length; i++)
             {
-                for (int y = 0; y < height; y++)
-                {
-                    heightMap[x, y] = smoothedMap[x, y];
-                }
+                vertices[i] = smoothedVertices[i];
             }
         }
     }
