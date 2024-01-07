@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GemStone00
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 2afe0ed8b33cf4d42b322c20a91a083b, type: 3}
+      propertyPath: m_TagString
+      value: GemCrystal
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 2afe0ed8b33cf4d42b322c20a91a083b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 41.671356

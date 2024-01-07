@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PurpCrystal00
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
+      propertyPath: m_TagString
+      value: PurpleCrystal
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 0182e814e0408fe43b26cd6a3619c8d0, type: 3}
       propertyPath: m_LocalScale.x
       value: 3
