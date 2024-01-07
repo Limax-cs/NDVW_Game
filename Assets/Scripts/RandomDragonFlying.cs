@@ -65,6 +65,8 @@ public class RandomDragonFlying : MonoBehaviour
         return false;
     }
 
+    public float detectionRadius = 40.0f; 
+
     // Optional: A visualization for debugging purposes
     void OnDrawGizmos()
     {
@@ -80,5 +82,8 @@ public class RandomDragonFlying : MonoBehaviour
         Gizmos.DrawLine(transform.position, targetPosition);
         // Draw ray for collision detection
         Gizmos.DrawLine(transform.position, transform.position + (targetPosition - transform.position).normalized * collisionAvoidanceDistance);
+        Gizmos.DrawWireSphere(transform.position, collisionAvoidanceDistance);
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

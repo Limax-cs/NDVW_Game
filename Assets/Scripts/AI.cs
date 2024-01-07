@@ -13,6 +13,9 @@ public class AI : MonoBehaviour {
 
     void Start() {
 
+        // int randomSeed = System.Guid.NewGuid().GetHashCode();
+        // Random.InitState(randomSeed);
+
         // agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
