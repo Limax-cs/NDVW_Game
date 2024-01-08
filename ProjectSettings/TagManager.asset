@@ -8,6 +8,12 @@ TagManager:
   - SaltBullet
   - DirectSaltBullet
   - Terrain
+  - CinemachineTarget
+  - Metalon
+  - Spider
+  - Bear
+  - Dragon
+  - Crab
   layers:
   - Default
   - TransparentFX
@@ -16,7 +22,7 @@ TagManager:
   - Water
   - UI
   - Pickable
-  - 
+  - Enemy
   - 
   - 
   - 
