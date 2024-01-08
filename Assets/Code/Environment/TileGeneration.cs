@@ -64,7 +64,7 @@ public class TileGeneration : MonoBehaviour
         // calculate tile depth and width based on the mesh vertices
         Vector3[] meshVertices = this.meshFilter.mesh.vertices;
         int tileDepth = (int)Mathf.Sqrt(meshVertices.Length);
-        UnityEngine.Debug.Log(tileDepth);
+        //UnityEngine.Debug.Log(tileDepth);
         int tileWidth = tileDepth;
 
         // calculate the offsets based on the tile position
@@ -117,7 +117,7 @@ public class TileGeneration : MonoBehaviour
         SpawnTileObjects(this.gameObject, currentBiome);
 
         // Generate NavMesh for the tile
-        surface.BuildNavMesh();
+        //surface.BuildNavMesh();
     }
 
     private void UpdateMeshVertices(float[,] heightMap)
