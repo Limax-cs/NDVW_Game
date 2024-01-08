@@ -3,35 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Terrain
-<<<<<<< HEAD
-<<<<<<< HEAD
-  - CinemachineTarget
-  - Metalon
-  - Spider
-  - Bear
-  - Dragon
-  - Crab
-=======
-  - X
-  - Y
-  - Z
-  - W
-=======
->>>>>>> npc
-  - spaceship1
-  - spaceship2
-  - spaceship1_item
-  - spaceship2_item
-<<<<<<< HEAD
->>>>>>> main
-=======
-  - explorable
-  - mole
-  - weapon
-  - consumable
->>>>>>> npc
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -39,8 +11,8 @@ TagManager:
   - 
   - Water
   - UI
-  - Pickable
-  - Enemy
+  - 
+  - 
   - 
   - 
   - 
