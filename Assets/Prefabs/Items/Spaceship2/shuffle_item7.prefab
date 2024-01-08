@@ -31,13 +31,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5889228870846992341}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -26.990002, y: 17.16, z: -86.82}
-  m_LocalScale: {x: 500, y: 500.00012, z: 500.00012}
+  m_LocalScale: {x: 250, y: 250, z: 250}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &2729834888906019024
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -45,7 +45,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5889228870846992341}
-  m_Mesh: {fileID: 6944280398074339550, guid: 7676a83d62d93ae48858e247262c74cf, type: 3}
+  m_Mesh: {fileID: 6944280398074339550, guid: 793ec3d5cce848a44961fe5ca582aeda, type: 3}
 --- !u!23 &7987326457680923867
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 6944280398074339550, guid: 7676a83d62d93ae48858e247262c74cf, type: 3}
+  m_Mesh: {fileID: 6944280398074339550, guid: 793ec3d5cce848a44961fe5ca582aeda, type: 3}
 --- !u!54 &6605137898572953110
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -150,6 +150,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: bfdd4c472e5399142996234f4fb80b0e, type: 3}
+  inCorrectSpaceship: 0
+  ID: -1
+  usedItem: 0
+  itemObstacle: {fileID: 0}
 --- !u!114 &2860221452227528487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,12 +179,12 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5889228870846992341}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 1
   m_Extents: {x: 0.006, y: 0.0050000004, z: 0.006}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: -0.071, y: 0.018000001, z: -0.001}
+  m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5

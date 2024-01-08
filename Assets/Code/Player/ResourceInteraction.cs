@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ResourceInteraction : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class ResourceInteraction : MonoBehaviour
     [SerializeField]
     private Transform pickUpParent;
 
+    [SerializeField]
+    private Transform pickUpParentDirected;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,6 +37,12 @@ public class ResourceInteraction : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Aim weapon
+        Vector3 aimDirection = targetDirection.transform.position - pickUpParentDirected.position;
+        Quaternion desiredAimRot = Quaternion.LookRotation(aimDirection);
+        float aimAngleDiff = Quaternion.Angle(pickUpParentDirected.rotation, desiredAimRot);
+        pickUpParentDirected.rotation = Quaternion.RotateTowards(pickUpParentDirected.rotation, desiredAimRot, aimAngleDiff);
+
         //Change Item
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
@@ -84,6 +94,12 @@ public class ResourceInteraction : MonoBehaviour
         }
         else
         {
+            // Use Item
+            if(Input.GetButton("Fire1"))
+            {
+                Use();
+            }
+
             // Throw Item
             if(Input.GetButton("Fire2"))
             {
@@ -93,25 +109,41 @@ public class ResourceInteraction : MonoBehaviour
 
         // Update UI
         status.setElements(backpack, indexItem);
+
     }
 
     // Object Interaction
     private void Use()
     {
-
+        if (backpack[indexItem] is not null)
+        {
+            if (backpack[indexItem].GetComponent<ObjectItem>())
+            {
+                ObjectItem objectitem = backpack[indexItem].GetComponent<ObjectItem>();
+                objectitem.UseObject();
+            }
+            else if (backpack[indexItem].GetComponent<WeaponItem>())
+            {
+                WeaponItem weaponitem = backpack[indexItem].GetComponent<WeaponItem>();
+                weaponitem.Attack();
+            }
+            
+        }
     }
 
     private void Drop()
     {
         if (backpack[indexItem] is not null)
         {
-            backpack[indexItem].transform.SetParent(null);
-            backpack[indexItem] = null;
-            Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            Rigidbody rb = backpack[indexItem].GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.isKinematic = false;
             }
+            backpack[indexItem].transform.SetParent(null);
+            backpack[indexItem] = null;
+            
+            
         }
         
     }
@@ -127,7 +159,7 @@ public class ResourceInteraction : MonoBehaviour
             backpack[indexItem] = hit.collider.gameObject;
             backpack[indexItem].transform.position = Vector3.zero;
             backpack[indexItem].transform.rotation = Quaternion.identity;
-            backpack[indexItem].transform.SetParent(pickUpParent.transform, false);
+            backpack[indexItem].transform.SetParent(pickUpParentDirected.transform, false);
             if (rb != null)
             {
                 rb.isKinematic = true;
@@ -151,13 +183,18 @@ public class ResourceInteraction : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = true;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = true;
+            }
+            
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = true;
             backpack[item].GetComponent<Collider>().GetComponent<Highlight>()?.ToggleHighLight(false);
-            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
-            nm.enabled = true;
+            //NavMeshObstacle nm = backpack[item].GetComponent<NavMeshObstacle>();
+            //if (nm != null)
+            //    nm.enabled = true;
         }
     }
 
@@ -165,12 +202,17 @@ public class ResourceInteraction : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = false;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = false;
+            }
+
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = false;
-            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
-            nm.enabled = false;
+            //NavMeshObstacle nm = backpack[item].GetComponent<NavMeshObstacle>();
+            //if (nm != null)
+            //    nm.enabled = false;
             
         }
     }

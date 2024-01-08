@@ -18,9 +18,9 @@ public class Highlight : MonoBehaviour
     private void Awake()
     {
         materials = new List<Material>();
-        foreach (var Renderer in renderers)
+        foreach (var renderer in renderers)
         {
-            materials.AddRange(new List<Material>(GetComponent<Renderer>().materials));
+            materials.AddRange(new List<Material>(renderer.GetComponent<Renderer>().materials));
         }
 
     }

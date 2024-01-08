@@ -4,10 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - SlimedSaltBullet
-  - SaltBullet
-  - DirectSaltBullet
   - Terrain
+<<<<<<< HEAD
 <<<<<<< HEAD
   - CinemachineTarget
   - Metalon
@@ -20,11 +18,20 @@ TagManager:
   - Y
   - Z
   - W
+=======
+>>>>>>> npc
   - spaceship1
   - spaceship2
   - spaceship1_item
   - spaceship2_item
+<<<<<<< HEAD
 >>>>>>> main
+=======
+  - explorable
+  - mole
+  - weapon
+  - consumable
+>>>>>>> npc
   layers:
   - Default
   - TransparentFX
