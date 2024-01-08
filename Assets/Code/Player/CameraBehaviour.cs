@@ -20,6 +20,7 @@ public class CameraBehaviour : MonoBehaviour
     //Shooting reference
     public float range = 200.0f;
     public GameObject ShootingTarget;
+    public LayerMask targetMask;
 
     //Text on upper left corner
     public Text points;
@@ -57,7 +58,7 @@ public class CameraBehaviour : MonoBehaviour
         //Raycast
         RaycastHit hit;
         Debug.DrawRay(transform.position, transform.forward * range, Color.blue);
-        if(Physics.Raycast(transform.position, transform.forward, out hit, range))
+        if(Physics.Raycast(transform.position, transform.forward, out hit, range, targetMask))
         {
             //Debug.Log(hit.transform.name);
             float angle = Vector3.Angle(hit.point - target.position, target.forward);

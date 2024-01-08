@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ResourceInteraction : MonoBehaviour
 {
@@ -21,9 +22,19 @@ public class ResourceInteraction : MonoBehaviour
     [SerializeField]
     private Transform pickUpParent;
 
+    [SerializeField]
+    private Transform pickUpParentDirected;
+
+    public AgentParams agentParams;
+
+    public float interactTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
+        agentParams = new AgentParams(0,1000,1000);
+        agentParams.type = "Player";
+
         for (int i=0; i<9; i++)
         {
             backpack.Add(null);
@@ -33,6 +44,12 @@ public class ResourceInteraction : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // Aim weapon
+        Vector3 aimDirection = targetDirection.transform.position - pickUpParentDirected.position;
+        Quaternion desiredAimRot = Quaternion.LookRotation(aimDirection);
+        float aimAngleDiff = Quaternion.Angle(pickUpParentDirected.rotation, desiredAimRot);
+        pickUpParentDirected.rotation = Quaternion.RotateTowards(pickUpParentDirected.rotation, desiredAimRot, aimAngleDiff);
+
         //Change Item
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
@@ -53,6 +70,22 @@ public class ResourceInteraction : MonoBehaviour
         // Make the item visible
         MakeVisible(indexItem);
 
+
+        
+        if (backpack[indexItem] != null)
+        {
+            // Use Item
+            if(Input.GetButton("Fire1") && (interactTime <= 0))
+            {
+                Use();
+            }
+
+            // Throw Item
+            if(Input.GetButton("Fire2"))
+            {
+                Drop();
+            }
+        }
 
         if (backpack[indexItem] == null)
         {
@@ -82,36 +115,76 @@ public class ResourceInteraction : MonoBehaviour
             }
 
         }
-        else
-        {
-            // Throw Item
-            if(Input.GetButton("Fire2"))
-            {
-                Drop();
-            }
-        }
+
+        // Update interact time
+        if (interactTime > 0)
+            interactTime -= Time.deltaTime;
 
         // Update UI
         status.setElements(backpack, indexItem);
+        status.setAgentParams(agentParams);
+
     }
 
     // Object Interaction
     private void Use()
     {
+        if (backpack[indexItem] is not null)
+        {
+            if (backpack[indexItem].GetComponent<ObjectItem>())
+            {
+                ObjectItem objectitem = backpack[indexItem].GetComponent<ObjectItem>();
+                objectitem.UseObject();
+            }
+            else if (backpack[indexItem].GetComponent<WeaponItem>())
+            {
+                WeaponItem weaponitem = backpack[indexItem].GetComponent<WeaponItem>();
+                weaponitem.weaponDescrib.agentID = agentParams.ID;
+                weaponitem.weaponDescrib.userType = "Player";
+                weaponitem.Attack();
+            }
+            else if (backpack[indexItem].GetComponent<EdibleItem>())
+            {
+                // Update edible item
+                EdibleItem edibleitem = backpack[indexItem].GetComponent<EdibleItem>();
+                edibleitem.edibleDescrib.agentID = agentParams.ID;
+                edibleitem.edibleDescrib.userType = "Player";
+                edibleitem.target = this.gameObject;
+                
+                Vector3 heading = targetDirection.transform.position - transform.position;
+                if(Physics.Raycast(
+                        transform.position, 
+                        heading/heading.magnitude, 
+                        out hit, 
+                        range))
+                {
+                    if (hit.collider.tag == "mole")
+                    {
+                        edibleitem.target = hit.collider.gameObject;
+                    }
+                }
 
+                // Consume
+                edibleitem.Consume();
+
+            }
+            
+        }
     }
 
     private void Drop()
     {
         if (backpack[indexItem] is not null)
         {
-            backpack[indexItem].transform.SetParent(null);
-            backpack[indexItem] = null;
-            Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            Rigidbody rb = backpack[indexItem].GetComponent<Rigidbody>();
             if (rb != null)
             {
                 rb.isKinematic = false;
             }
+            backpack[indexItem].transform.SetParent(null);
+            backpack[indexItem] = null;
+            
+            
         }
         
     }
@@ -127,11 +200,12 @@ public class ResourceInteraction : MonoBehaviour
             backpack[indexItem] = hit.collider.gameObject;
             backpack[indexItem].transform.position = Vector3.zero;
             backpack[indexItem].transform.rotation = Quaternion.identity;
-            backpack[indexItem].transform.SetParent(pickUpParent.transform, false);
+            backpack[indexItem].transform.SetParent(pickUpParentDirected.transform, false);
             if (rb != null)
             {
                 rb.isKinematic = true;
             }
+            interactTime = 1f;
         }
         if (hit.collider.GetComponent<ObjectItem>())
         {
@@ -143,6 +217,7 @@ public class ResourceInteraction : MonoBehaviour
             {
                 rb.isKinematic = true;
             }
+            interactTime = 1f;
         }
         
     }
@@ -151,13 +226,18 @@ public class ResourceInteraction : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = true;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = true;
+            }
+            
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = true;
             backpack[item].GetComponent<Collider>().GetComponent<Highlight>()?.ToggleHighLight(false);
-            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
-            nm.enabled = true;
+            //NavMeshObstacle nm = backpack[item].GetComponent<NavMeshObstacle>();
+            //if (nm != null)
+            //    nm.enabled = true;
         }
     }
 
@@ -165,12 +245,17 @@ public class ResourceInteraction : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = false;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = false;
+            }
+
             Collider coll = backpack[item].GetComponent<Collider>();
             coll.enabled = false;
-            UnityEngine.AI.NavMeshObstacle nm = backpack[item].GetComponent<UnityEngine.AI.NavMeshObstacle>();
-            nm.enabled = false;
+            //NavMeshObstacle nm = backpack[item].GetComponent<NavMeshObstacle>();
+            //if (nm != null)
+            //    nm.enabled = false;
             
         }
     }

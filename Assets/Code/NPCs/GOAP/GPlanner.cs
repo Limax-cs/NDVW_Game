@@ -8,23 +8,23 @@ public class Node
 {
     public Node parent;
     public float cost;
-    public Dictionary<string, int> state;
+    public Dictionary<string, float> state;
     public GAction action;
 
-    public Node(Node parent, float cost, Dictionary<string, int> allstates, GAction action)
+    public Node(Node parent, float cost, Dictionary<string, float> allstates, GAction action)
     {
         this.parent = parent;
         this.cost = cost;
-        this.state = new Dictionary<string, int>(allstates);
+        this.state = new Dictionary<string, float>(allstates);
         this.action = action;
     }
 
-    public Node(Node parent, float cost, Dictionary<string, int> allstates, Dictionary<string, int> beliefstates, GAction action)
+    public Node(Node parent, float cost, Dictionary<string, float> allstates, Dictionary<string, float> beliefstates, GAction action)
     {
         this.parent = parent;
         this.cost = cost;
-        this.state = new Dictionary<string, int>(allstates);
-        foreach (KeyValuePair<string, int> b in beliefstates)
+        this.state = new Dictionary<string, float>(allstates);
+        foreach (KeyValuePair<string, float> b in beliefstates)
             if (!this.state.ContainsKey(b.Key))
                 this.state.Add(b.Key, b.Value);
         this.action = action;
@@ -34,14 +34,17 @@ public class Node
 // Definition of the Planner
 public class GPlanner
 {
-    public Queue<GAction> plan(List<GAction> actions, Dictionary<string, int> goal, WorldStates beliefstates)
+    public Queue<GAction> plan(List<GAction> actions, Dictionary<string, float> goal, WorldStates beliefstates)
     {
         // Get achievable actions
         List<GAction> usableActions = new List<GAction>();
         foreach (GAction a in actions)
         {
             if (a.IsAchievable())
+            {
+                //Debug.Log("Achievable: " + a);
                 usableActions.Add(a);
+            }
         }
         
 
@@ -53,7 +56,7 @@ public class GPlanner
 
         if(!success)
         {
-            Debug.Log("No Plan");
+            //Debug.Log("No Plan");
             return null;
         }
 
@@ -69,6 +72,7 @@ public class GPlanner
                     cheapest = leaf;
             }
         }
+        Debug.Log("Possible solutions: " + leaves.Count);
         
         // Extract the path
         List<GAction> result = new List<GAction>();
@@ -98,7 +102,7 @@ public class GPlanner
     }
 
     // Build the graph of the GOAP
-    private bool BuildGraph(Node parent, List<Node> leaves, List<GAction> usableActions, Dictionary<string, int> goal)
+    private bool BuildGraph(Node parent, List<Node> leaves, List<GAction> usableActions, Dictionary<string, float> goal)
     {
         bool foundPath = false;
         foreach (GAction action in usableActions)
@@ -107,13 +111,24 @@ public class GPlanner
             // Ensure that the current action is feasible
             if(action.IsAchievableGiven(parent.state))
             {
+                
                 // Modify states according that action
-                Dictionary<string, int> currentState = new Dictionary<string, int>(parent.state);
-                foreach (KeyValuePair<string, int> eff in action.effects)
+                Dictionary<string, float> currentState = new Dictionary<string, float>(parent.state);
+
+
+                foreach (KeyValuePair<string, float> eff in action.effects)
                 {
                     if (!currentState.ContainsKey(eff.Key))
                         currentState.Add(eff.Key, eff.Value);
+                    else
+                        currentState[eff.Key] = eff.Value;
                 }
+                /*
+                foreach (KeyValuePair<string, float> ceff in action.counter_effects)
+                {
+                    if (!currentState.ContainsKey(ceff.Key))
+                        currentState.Remove(ceff.Key);
+                }*/
 
                 // Update Node
                 Node node = new Node(parent, parent.cost + action.cost, currentState, action);
@@ -133,14 +148,14 @@ public class GPlanner
                 }
             }
         }
-
+        
         return foundPath;
     }
 
     // Check if a goal was achieved
-    private bool GoalAchieved(Dictionary<string, int> goal, Dictionary<string, int> state)
+    private bool GoalAchieved(Dictionary<string, float> goal, Dictionary<string, float> state)
     {
-        foreach (KeyValuePair<string, int> g in goal)
+        foreach (KeyValuePair<string, float> g in goal)
         {
             if (!state.ContainsKey(g.Key))
                 return false;
