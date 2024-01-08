@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
+using Unity.AI.Navigation;
+using System.Linq;
 
 //[System.Serializable]
 //public class TerrainType
@@ -29,11 +31,14 @@ public class TileGeneration : MonoBehaviour
     [SerializeField]
     public float mapScale;
 
-    //[SerializeField]
-    //private TerrainType[] terrainTypes;
-
     [SerializeField]
     private float heightMultiplier;
+
+    [SerializeField]
+    public int tileScale = 1;
+
+    [SerializeField]
+    public NavMeshSurface surface;
 
     //[SerializeField]
     //private AnimationCurve heightCurve;
@@ -55,9 +60,11 @@ public class TileGeneration : MonoBehaviour
 
     void GenerateTile()
     {
+        this.gameObject.transform.localScale = new Vector3(tileScale, tileScale, tileScale);
         // calculate tile depth and width based on the mesh vertices
         Vector3[] meshVertices = this.meshFilter.mesh.vertices;
         int tileDepth = (int)Mathf.Sqrt(meshVertices.Length);
+        UnityEngine.Debug.Log(tileDepth);
         int tileWidth = tileDepth;
 
         // calculate the offsets based on the tile position
@@ -65,7 +72,7 @@ public class TileGeneration : MonoBehaviour
         float offsetZ = -this.gameObject.transform.position.z;
 
         // generate a heightMap using noise
-        float[,] heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ, waves);
+        float[,] heightMap = this.noiseMapGeneration.GenerateNoiseMap(tileDepth, tileWidth, this.mapScale, offsetX, offsetZ, waves, tileScale);
 
         // build a Texture2D from the height map
         System.Random random = new System.Random();
@@ -105,47 +112,13 @@ public class TileGeneration : MonoBehaviour
         this.tileRenderer.material.mainTexture = myTexture;
 
         UpdateMeshVertices(heightMap);
+
+        // Spawn items
+        SpawnTileObjects(this.gameObject, currentBiome);
+
+        // Generate NavMesh for the tile
+        surface.BuildNavMesh();
     }
-
-    //private Texture2D BuildTexture(float[,] heightMap)
-    //{
-    //    int tileDepth = heightMap.GetLength(0);
-    //    int tileWidth = heightMap.GetLength(1);
-
-    //    Color[] colorMap = new Color[tileDepth * tileWidth];
-    //    for (int zIndex = 0; zIndex < tileDepth; zIndex++)
-    //    {
-    //        for (int xIndex = 0; xIndex < tileWidth; xIndex++)
-    //        {
-    //            // transform the 2D map index is an Array index
-    //            int colorIndex = zIndex * tileWidth + xIndex;
-    //            float height = heightMap[zIndex, xIndex];
-    //            // assign as color a shade of grey proportional to the height value
-    //            //colorMap[colorIndex] = Color.Lerp(Color.black, Color.white, height);
-    //            TerrainType terrainType = ChooseTerrainType(height);
-    //            colorMap[colorIndex] = terrainType.color;
-    //        }
-    //    }
-    //    Texture2D tileTexture = new Texture2D(tileWidth, tileDepth);
-    //    tileTexture.wrapMode = TextureWrapMode.Clamp;
-    //    tileTexture.SetPixels(colorMap);
-    //    tileTexture.Apply();
-    //    return tileTexture;
-    //}
-
-    //TerrainType ChooseTerrainType(float height)
-    //{
-    //    // for each terrain type, check if the height is lower than the one for the terrain type
-    //    foreach (TerrainType terrainType in terrainTypes)
-    //    {
-    //        // return the first terrain type whose height is higher than the generated one
-    //        if (height < terrainType.height)
-    //        {
-    //            return terrainType;
-    //        }
-    //    }
-    //    return terrainTypes[terrainTypes.Length - 1];
-    //}
 
     private void UpdateMeshVertices(float[,] heightMap)
     {
@@ -158,7 +131,7 @@ public class TileGeneration : MonoBehaviour
         int vertexIndex = 0;
         for (int zIndex = 0; zIndex < tileDepth; zIndex++)
         {
-            for(int xIndex = 0; xIndex < tileWidth; xIndex++)
+            for (int xIndex = 0; xIndex < tileWidth; xIndex++)
             {
                 float height = heightMap[zIndex, xIndex];
 
@@ -177,4 +150,170 @@ public class TileGeneration : MonoBehaviour
         // update the mesh collider
         this.meshCollider.sharedMesh = this.meshFilter.mesh;
     }
+
+    private void SpawnTileObjects(GameObject tileGameObject, BiomeType biomeType)
+    {
+        MeshRenderer renderer = tileGameObject.GetComponent<MeshRenderer>();
+        Vector3 totalSize = renderer.bounds.size;
+        RandomLocationGenerator rlg = new RandomLocationGenerator(tileGameObject.transform.position, (int)totalSize.x, (int)totalSize.z);
+
+        Vector3 castDirection = Vector3.down;
+
+        float raycastOffset = 50f;
+
+        string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
+        if (biomeType == BiomeType.Forest)
+        {
+            for(int i = 0; i < 40; i++)
+            {
+                for (int item_index = 1; item_index <= 2; item_index++)
+                {
+                    GameObject tmp_go = Resources.Load("Handpainted_Forest_pack/Models/Fir_v1_" + item_index) as GameObject;
+                    Vector3 loc = rlg.getRandomLocation();
+
+                    // Adjust the raycast starting position above the tile
+                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+
+                    RaycastHit hit;
+                    if (Physics.Raycast(raycastStart, castDirection, out hit))
+                    {
+                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        if (biomeTags.Contains(hit.collider.gameObject.tag))
+                        {
+                            Instantiate(tmp_go, loc, Quaternion.identity);
+                        }
+                    }
+                }
+            }
+            //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Handpainted_Forest_pack/Models/Fir_v1_");
+        }
+        else if (biomeType == BiomeType.Desert)
+        {
+            for (int i = 0; i < 40; i++)
+            {
+                for (int item_index = 1; item_index <= 4; item_index++)
+                {
+                    GameObject tmp_go = Resources.Load("Free_Rocks/_prefabs/rock" + item_index) as GameObject;
+                    Vector3 loc = rlg.getRandomLocation();
+
+                    // Adjust the raycast starting position above the tile
+                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+
+                    RaycastHit hit;
+                    if (Physics.Raycast(raycastStart, castDirection, out hit))
+                    {
+                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        if (biomeTags.Contains(hit.collider.gameObject.tag))
+                        {
+                            Instantiate(tmp_go, loc, Quaternion.identity);
+                        }
+                    }
+                }
+            }
+            
+            //BatchSpawnTileObjects(tileGameObject, biomeType, 30, "Free_Rocks/_prefabs/rock");
+        }
+        else if (biomeType == BiomeType.Snowy)
+        {
+            for(int i = 0; i < 60; i++)
+            {
+                for (int item_index = 1; item_index <= 3; item_index++)
+                {
+                    GameObject tmp_go = Resources.Load("Handpainted_Forest_pack/Models/Grass_v1_" + item_index) as GameObject;
+                    Vector3 loc = rlg.getRandomLocation();
+
+                    // Adjust the raycast starting position above the tile
+                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+
+                    RaycastHit hit;
+                    if (Physics.Raycast(raycastStart, castDirection, out hit))
+                    {
+                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        if (biomeTags.Contains(hit.collider.gameObject.tag))
+                        {
+                            Instantiate(tmp_go, loc, Quaternion.identity);
+                        }
+                    }
+                }
+            }
+            
+            //BatchSpawnTileObjects(tileGameObject, biomeType, 20, "Free_Rocks/_prefabs/rock");
+        }
+        else if (biomeType == BiomeType.Rocky)
+        {
+            for (int i = 0; i < 80; i++)
+            {
+                for (int item_index = 1; item_index <= 4; item_index++)
+                {
+                    GameObject tmp_go = Resources.Load("Free_Rocks/_prefabs/rock" + item_index) as GameObject;
+                    Vector3 loc = rlg.getRandomLocation();
+
+                    // Adjust the raycast starting position above the tile
+                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+
+                    RaycastHit hit;
+                    if (Physics.Raycast(raycastStart, castDirection, out hit))
+                    {
+                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        if (biomeTags.Contains(hit.collider.gameObject.tag))
+                        {
+                            Instantiate(tmp_go, loc, Quaternion.identity);
+                        }
+                    }
+                }
+            }
+            //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Free_Rocks/_prefabs/rock");
+        }
+    }
+
+    //private void BatchSpawnTileObjects(GameObject tileGameObject, BiomeType biomeType, int itemCount, string prefabPath)
+    //{
+    //    RandomLocationGenerator rlg = new RandomLocationGenerator(tileGameObject.transform.position, (int)tileGameObject.transform.localScale.x, (int)tileGameObject.transform.localScale.z);
+
+    //    Vector3 castDirection = Vector3.down;
+    //    float raycastOffset = 50f;
+    //    string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
+
+    //    GameObject[] prefabs = new GameObject[itemCount];
+    //    for (int i = 1; i <= itemCount; i++)
+    //    {
+    //        prefabs[i - 1] = Resources.Load(prefabPath) as GameObject;
+    //    }
+
+    //    Vector3[] positions = new Vector3[itemCount];
+    //    for (int i = 0; i < itemCount; i++)
+    //    {
+    //        Vector3 loc = rlg.getRandomLocation() * tileScale;
+    //        Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+
+    //        RaycastHit hit;
+    //        if (Physics.Raycast(raycastStart, castDirection, out hit))
+    //        {
+    //            loc = hit.point;
+    //            if (biomeTags.Contains(hit.collider.gameObject.tag))
+    //            {
+    //                positions[i] = loc;
+    //            }
+    //        }
+    //    }
+
+    //    // Instantiate prefabs at the generated positions
+    //    for (int i = 0; i < itemCount; i++)
+    //    {
+    //        if (positions[i] != Vector3.zero)
+    //        {
+    //            int randomPrefabIndex = UnityEngine.Random.Range(0, prefabs.Length);
+    //            Instantiate(prefabs[randomPrefabIndex], positions[i], Quaternion.identity);
+    //        }
+    //    }
+    //}
+
+    //void GenerateNavMesh()
+    //{
+    //    NavMeshSurface navMeshSurface = this.gameObject.AddComponent<NavMeshSurface>();
+    //    navMeshSurface.collectObjects = CollectObjects.Children;
+
+    //    // Attach the NavMeshSurface to the GameObject and bake the NavMesh
+    //    navMeshSurface.BuildNavMesh();
+    //}
 }

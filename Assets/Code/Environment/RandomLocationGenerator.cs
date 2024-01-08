@@ -21,8 +21,8 @@ public class RandomLocationGenerator{
     }
 
     public Vector3 getRandomLocation(){
-        float half_w = this.width/2;
-        float half_h = this.height/2;
+        float half_w = this.width / 2.0f;
+        float half_h = this.height / 2.0f;
 
         return new Vector3(Random.Range(-1*half_w, half_w) + location.x, 0, Random.Range(-1*half_h, half_h) + location.z);
     }

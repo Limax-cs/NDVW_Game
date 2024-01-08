@@ -24,7 +24,7 @@ public class NoiseMapGeneration : MonoBehaviour
         
     }
 
-    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, Wave[] waves)
+    public float[,] GenerateNoiseMap(int mapDepth, int mapWidth, float scale, float offsetX, float offsetZ, Wave[] waves, int tileScale)
     {
         // create an empty noise map with the mapDepth and mapWidth coordinates
         float[,] noiseMap = new float[mapDepth, mapWidth];
@@ -34,8 +34,8 @@ public class NoiseMapGeneration : MonoBehaviour
             for (int xIndex = 0; xIndex < mapWidth; xIndex++)
             {
                 // calculate sample indices based on the coordinates, the scale and the offset
-                float sampleX = (xIndex + offsetX) / scale;
-                float sampleZ = (zIndex + offsetZ) / scale;
+                float sampleX = (xIndex * tileScale + offsetX) / scale;
+                float sampleZ = (zIndex * tileScale + offsetZ) / scale;
                 float noise = 0f;
                 float normalization = 0f;
 
