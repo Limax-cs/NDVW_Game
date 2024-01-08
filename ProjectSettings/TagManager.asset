@@ -13,6 +13,7 @@ TagManager:
   - mole
   - weapon
   - consumable
+  - damage
   layers:
   - Default
   - TransparentFX

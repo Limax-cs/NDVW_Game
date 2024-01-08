@@ -26,6 +26,10 @@ public class UpdateWorld : MonoBehaviour
     public List<GameObject> player_HP_back = new List<GameObject>();
     public List<GameObject> player_HP = new List<GameObject>();
 
+    // Weapons and Consumable
+    public GameObject[] weapons;
+    public GameObject[] consumables;
+
     void Awake()
     {
         // GOALS STATUS
@@ -110,6 +114,32 @@ public class UpdateWorld : MonoBehaviour
         }
 
         GWorld.Instance.GetWorld().ModifyState("Moles", count);
+
+        // WEAPONS AND CONSUMABLES
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+        weapons = GameObject.FindGameObjectsWithTag("weapon");
+        consumables = GameObject.FindGameObjectsWithTag("consumable");
+
+        count = 0;
+        foreach (GameObject g in weapons)
+        {
+            // Generate its ID
+            WeaponItem weaponItem = g.GetComponent<WeaponItem>();
+            weaponItem.weaponDescrib.ID = count;
+            count += 1;
+        }
+        GWorld.Instance.GetWorld().ModifyState("Weapons", count);
+
+        count = 0;
+        foreach (GameObject g in consumables)
+        {
+            // Generate its ID
+            EdibleItem edibleItem = g.GetComponent<EdibleItem>();
+            edibleItem.edibleDescrib.ID = count;
+            count += 1;
+        }
+        GWorld.Instance.GetWorld().ModifyState("Consumables", count);
     }
     
     void LateUpdate()

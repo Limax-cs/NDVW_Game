@@ -35,17 +35,44 @@ public class SubGoal
 }
 
 [System.Serializable]
+public class AgentAffection
+{
+    public GameObject agent;
+    public float affection;
+}
+
+[System.Serializable]
+public class AgentCuriosity
+{
+    public GameObject item;
+    public float curiosity;
+}
+
+[System.Serializable]
 public class AgentParams
 {
     public int ID;
     public float HP;
     public float MaxHP;
+    public string type = "Mole";
+    public float Mood;
+    public float playerAffection;
+    public List<AgentAffection> moleAffection;
+    public List<AgentCuriosity> spaceshipCuriosity;
+    public List<AgentCuriosity> weaponCuriosity;
+    public List<AgentCuriosity> edibleCuriosity;
 
     public AgentParams(int ID, float HP, float MaxHP)
     {
         this.ID = ID;
         this.HP = HP;
         this.MaxHP = MaxHP;
+        this.Mood = 1.0f;
+        this.playerAffection = 1.0f;
+        this.moleAffection = new List<AgentAffection>();
+        this.spaceshipCuriosity = new List<AgentCuriosity>();
+        this.weaponCuriosity = new List<AgentCuriosity>();
+        this.edibleCuriosity = new List<AgentCuriosity>();
     }
 }
 
@@ -133,7 +160,7 @@ public class MoleAgent : MonoBehaviour
         // Mole Sensing
         moleSensing = SenseArea.GetComponent<MoleSenseV2>();
 
-        // MAIN GOALS
+        // MAIN GOALS AND ACTIONS
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         // Instantiate Spaceship Goals
@@ -143,7 +170,7 @@ public class MoleAgent : MonoBehaviour
             ObjectItem objectItem = g.GetComponent<ObjectItem>();
             SubGoal sg = new SubGoal("Recover " + objectItem.ID, objectItem.ID, true);
             goals.Add(sg, 1);
-            this.beliefs.SetState("Detect Mole SSItem " + objectItem.ID, 1);
+            //this.beliefs.SetState("Detect Mole SSItem " + objectItem.ID, 1);
         }
         //this.beliefs.SetState("Detect Mole SSItem 0", 1);
 
@@ -159,6 +186,59 @@ public class MoleAgent : MonoBehaviour
         MoleRecover recover = this.gameObject.AddComponent<MoleRecover>();
         actions.Add(recover);
         actionScores.Add(0.0f);
+
+        // Instantiate Spaceship recovery actions
+        MoleAggresive aggressive = this.gameObject.AddComponent<MoleAggresive>();
+        actions.Add(aggressive);
+        actionScores.Add(0.0f);
+
+        // UPDATE AGENT PARAMS
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        GameObject[] player_goals = GameObject.FindGameObjectsWithTag("spaceship1_item");
+        GameObject[] moles = GameObject.FindGameObjectsWithTag("mole");
+        GameObject[] weapons = GameObject.FindGameObjectsWithTag("weapon");
+        GameObject[] consumables = GameObject.FindGameObjectsWithTag("consumable");
+        moleParams.Mood = Random.Range(0.3f, 1.0f);
+        moleParams.playerAffection = Random.Range(0.0f, 0.7f);
+        
+        float generalSpaceshipCuriosity = Random.Range(0.3f, 0.6f);
+        foreach(GameObject g in player_goals)
+        {
+            AgentCuriosity agentCuriosity = new AgentCuriosity();
+            agentCuriosity.item = g;
+            agentCuriosity.curiosity = generalSpaceshipCuriosity + Random.Range(0.0f, 0.4f);
+            moleParams.spaceshipCuriosity.Add(agentCuriosity);
+        }
+
+        foreach(GameObject g in moles)
+        {
+            if (g != this.gameObject)
+            {
+                AgentAffection agentAffection = new AgentAffection();
+                agentAffection.agent = g;
+                agentAffection.affection = Random.Range(0.7f, 1.0f);
+                moleParams.moleAffection.Add(agentAffection);
+            }
+        }
+
+        float generalWeaponsCuriosity = Random.Range(0.0f, 0.5f);
+        foreach(GameObject g in weapons)
+        {
+            AgentCuriosity agentCuriosity = new AgentCuriosity();
+            agentCuriosity.item = g;
+            agentCuriosity.curiosity = generalWeaponsCuriosity + Random.Range(0.0f, 0.5f);
+            moleParams.weaponCuriosity.Add(agentCuriosity);
+        }
+
+        float generalEdibleCuriosity = Random.Range(0.0f, 0.5f);
+        foreach(GameObject g in consumables)
+        {
+            AgentCuriosity agentCuriosity = new AgentCuriosity();
+            agentCuriosity.item = g;
+            agentCuriosity.curiosity = generalEdibleCuriosity + Random.Range(0.0f, 0.5f);
+            moleParams.edibleCuriosity.Add(agentCuriosity);
+        }
+
     }
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -215,9 +295,15 @@ public class MoleAgent : MonoBehaviour
                     ObjectItem objectItem = this.backpack[k].GetComponent<ObjectItem>();
                     this.beliefs.SetState("Has Mole SSItem " + objectItem.ID, k);
                 }
-                else
+                else if(this.backpack[k].tag == "weapon")
                 {
-                    this.beliefs.SetState("Has " + this.backpack[k].name, k);
+                    WeaponItem weaponItem = this.backpack[k].GetComponent<WeaponItem>();
+                    this.beliefs.SetState("Has Weapon " + weaponItem.weaponDescrib.ID, k);
+                }
+                else if(this.backpack[k].tag == "consumable")
+                {
+                    EdibleItem edibleItem = this.backpack[k].GetComponent<EdibleItem>();
+                    this.beliefs.SetState("Has Edible " + edibleItem.edibleDescrib.ID, k);
                 }
             }
         }
@@ -407,5 +493,15 @@ public class MoleAgent : MonoBehaviour
     public void UpdateIdex(int index)
     {
         this.indexItem = index;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "damage")
+        {
+            WeaponItem weaponItem = collision.collider.GetComponent<WeaponItem>();
+            moleParams.HP = Mathf.Max(moleParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            Debug.Log("Mole Hit");
+        }
     }
 }

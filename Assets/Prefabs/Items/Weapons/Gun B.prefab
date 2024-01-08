@@ -103,12 +103,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 47c25108e926f654fae7c18249c97a03, type: 3}
   weaponDescrib:
+    userType: Mole
+    agentID: -1
     type: Gun
-    range: 2
-    attack: 1
-    impulse: 0
+    range: 25
+    attack: 100
+    impulse: 5
     speed: 40
-    cooldown: 0.5
+    cooldown: 0.1
   damageArea: {fileID: 0}
   bullet: {fileID: 1024032382115950238, guid: 03812f2ff9d4b6c4a95a555826eb8141, type: 3}
   shootingOut: {fileID: 9210275409741057979}

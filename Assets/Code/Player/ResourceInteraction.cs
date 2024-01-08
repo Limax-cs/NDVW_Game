@@ -25,9 +25,16 @@ public class ResourceInteraction : MonoBehaviour
     [SerializeField]
     private Transform pickUpParentDirected;
 
+    public AgentParams agentParams;
+
+    public float interactTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
+        agentParams = new AgentParams(0,1000,1000);
+        agentParams.type = "Player";
+
         for (int i=0; i<9; i++)
         {
             backpack.Add(null);
@@ -64,6 +71,22 @@ public class ResourceInteraction : MonoBehaviour
         MakeVisible(indexItem);
 
 
+        
+        if (backpack[indexItem] != null)
+        {
+            // Use Item
+            if(Input.GetButton("Fire1") && (interactTime <= 0))
+            {
+                Use();
+            }
+
+            // Throw Item
+            if(Input.GetButton("Fire2"))
+            {
+                Drop();
+            }
+        }
+
         if (backpack[indexItem] == null)
         {
             // Detect Object
@@ -92,23 +115,14 @@ public class ResourceInteraction : MonoBehaviour
             }
 
         }
-        else
-        {
-            // Use Item
-            if(Input.GetButton("Fire1"))
-            {
-                Use();
-            }
 
-            // Throw Item
-            if(Input.GetButton("Fire2"))
-            {
-                Drop();
-            }
-        }
+        // Update interact time
+        if (interactTime > 0)
+            interactTime -= Time.deltaTime;
 
         // Update UI
         status.setElements(backpack, indexItem);
+        status.setAgentParams(agentParams);
 
     }
 
@@ -125,7 +139,34 @@ public class ResourceInteraction : MonoBehaviour
             else if (backpack[indexItem].GetComponent<WeaponItem>())
             {
                 WeaponItem weaponitem = backpack[indexItem].GetComponent<WeaponItem>();
+                weaponitem.weaponDescrib.agentID = agentParams.ID;
+                weaponitem.weaponDescrib.userType = "Player";
                 weaponitem.Attack();
+            }
+            else if (backpack[indexItem].GetComponent<EdibleItem>())
+            {
+                // Update edible item
+                EdibleItem edibleitem = backpack[indexItem].GetComponent<EdibleItem>();
+                edibleitem.edibleDescrib.agentID = agentParams.ID;
+                edibleitem.edibleDescrib.userType = "Player";
+                edibleitem.target = this.gameObject;
+                
+                Vector3 heading = targetDirection.transform.position - transform.position;
+                if(Physics.Raycast(
+                        transform.position, 
+                        heading/heading.magnitude, 
+                        out hit, 
+                        range))
+                {
+                    if (hit.collider.tag == "mole")
+                    {
+                        edibleitem.target = hit.collider.gameObject;
+                    }
+                }
+
+                // Consume
+                edibleitem.Consume();
+
             }
             
         }
@@ -164,6 +205,7 @@ public class ResourceInteraction : MonoBehaviour
             {
                 rb.isKinematic = true;
             }
+            interactTime = 1f;
         }
         if (hit.collider.GetComponent<ObjectItem>())
         {
@@ -175,6 +217,7 @@ public class ResourceInteraction : MonoBehaviour
             {
                 rb.isKinematic = true;
             }
+            interactTime = 1f;
         }
         
     }

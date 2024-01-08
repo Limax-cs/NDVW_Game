@@ -8,11 +8,14 @@ public class StatusUI : MonoBehaviour
     public List<Image> slots = new List<Image>(9);
     public List<RawImage> items = new List<RawImage>(9);
     private int itemIndex = 4;
+    public GameObject HPbar;
+
+    public AgentParams playerParams;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        playerParams = new AgentParams(-1, 1000,1000);
     }
 
     // Update is called once per frame
@@ -41,6 +44,8 @@ public class StatusUI : MonoBehaviour
             else
                 items[i].rectTransform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
         }
+
+        HPbar.transform.localScale = new Vector3((float) playerParams.HP/playerParams.MaxHP, 1.0f, 1.0f);
     }
 
     public void setElements(List<GameObject> items_list, int itemIdx)
@@ -77,5 +82,10 @@ public class StatusUI : MonoBehaviour
 
         // Index
         itemIndex = itemIdx;
+    }
+
+    public void setAgentParams(AgentParams agentParams)
+    {
+        playerParams = agentParams;
     }
 }
