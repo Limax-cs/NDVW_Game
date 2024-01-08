@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 500.0002, y: 500.00018, z: 500.00012}
+  m_LocalScale: {x: 250, y: 250, z: 250}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -45,7 +45,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7454056896233902570}
-  m_Mesh: {fileID: 5281164229197889317, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
+  m_Mesh: {fileID: 5281164229197889317, guid: c48a6907cfc40e54f9bf70dd3d93449a, type: 3}
 --- !u!23 &6838482335894729646
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -109,7 +109,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 5281164229197889317, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
+  m_Mesh: {fileID: 5281164229197889317, guid: c48a6907cfc40e54f9bf70dd3d93449a, type: 3}
 --- !u!54 &9190679747891368533
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -150,6 +150,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 2800000, guid: 1ed4d6dfc0114e64a8562893da8a5560, type: 3}
+  inCorrectSpaceship: 0
+  ID: -1
+  usedItem: 0
+  itemObstacle: {fileID: 0}
 --- !u!114 &3134415599225397985
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,12 +179,12 @@ NavMeshObstacle:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7454056896233902570}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Shape: 0
-  m_Extents: {x: 0.0050000004, y: 0.0050000004, z: 0.002}
+  m_Extents: {x: 0.0050000004, y: 0.0050000004, z: 0.0050000004}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0.016, y: 0, z: -0.004}
+  m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5

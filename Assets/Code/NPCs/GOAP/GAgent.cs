@@ -1,44 +1,85 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using System.Linq;
 
+/*
 public class SubGoal
 {
-    public Dictionary<string, int> sgoals;
+    public Dictionary<string, float> sgoals;
     public bool remove;
 
-    public SubGoal(string s, int i, bool r)
+    public SubGoal(string s, float i, bool r)
     {
-        sgoals = new Dictionary<string, int>();
+        sgoals = new Dictionary<string, float>();
         sgoals.Add(s, i);
         remove = r;
     }
-}
+}*/
 
 public class GAgent : MonoBehaviour
 {
+
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AGENT PARAMETERS
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    // GOAP items
     public List<GAction> actions = new List<GAction>();
-    public Dictionary<SubGoal, int> goals = new Dictionary<SubGoal, int>();
+    public Dictionary<SubGoal, float> goals = new Dictionary<SubGoal, float>();
     public GInventory inventory = new GInventory();
     public WorldStates beliefs = new WorldStates();
+
+
+    // Agent Backpack
+    public List<GameObject> backpack = new List<GameObject>();
+    public int indexItem = 4;
+
+
+    // Agent Navigation
+    public NavMeshAgent agent;
+
     
-    //Planner Instantiation
+    //GOAP Planner Instantiation
     GPlanner planner;
     Queue<GAction> actionQueue;
     public GAction currentAction;
     SubGoal currentGoal;
 
-    // Start is called before the first frame update
+
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AGENT INITIALIZATION
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     public void Start()
     {
-        GAction[] acts = this.GetComponents<GAction>();
-        foreach (GAction a in acts)
-            actions.Add(a);
+        // Navmesh initialization
+        agent = this.gameObject.GetComponent<NavMeshAgent>();
+
+        // Initialize inventory
+        for (int i=0; i<9; i++)
+        {
+            backpack.Add(null);
+        }
+        
+    }
+
+
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    AGENT BACKPACK
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+    void FixedUpdate()
+    {
+        
     }
 
     
-    // Finish a current action
+
+    /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    GOAP PLANNER INTERACTION
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
     bool invoked = false;
     void CompleteAction()
     {
@@ -47,14 +88,13 @@ public class GAgent : MonoBehaviour
         invoked = false;
     }
 
-    // Update status
-    void LateUpdate()
+    public void LateUpdate()
     {
-        
+        //Debug.Log("Status P1");
         // Run the current action
         if (currentAction != null && currentAction.running)
         {
-            if (currentAction.agent.hasPath && currentAction.agent.remainingDistance < 3f)
+            if (currentAction.IsFinished())
             {
                 if (!invoked)
                 {
@@ -65,16 +105,16 @@ public class GAgent : MonoBehaviour
             return;
         }
 
+        //Debug.Log("Status P2");
+
         // Create a new plan
         if (planner == null | actionQueue == null)
         {
-            
             planner = new GPlanner();
 
             var sortedGoals = from entry in goals orderby entry.Value descending select entry;
-            
 
-            foreach(KeyValuePair<SubGoal, int> sg in sortedGoals)
+            foreach(KeyValuePair<SubGoal, float> sg in sortedGoals)
             {
                 actionQueue = planner.plan(actions, sg.Key.sgoals, beliefs);
                 if (actionQueue != null)
@@ -85,7 +125,9 @@ public class GAgent : MonoBehaviour
             }
         }
 
-        // Empty action queue
+        //Debug.Log("Status P3");
+
+        // Complete goal
         if (actionQueue != null && actionQueue.Count == 0)
         {
             if (currentGoal.remove)
@@ -96,6 +138,8 @@ public class GAgent : MonoBehaviour
             
         }
 
+        //Debug.Log("Status P4");
+
         // Continue with the following nodes
         if (actionQueue != null && actionQueue.Count > 0)
         {
@@ -105,19 +149,14 @@ public class GAgent : MonoBehaviour
 
             if (currentAction.PrePerform())
             {
-                if (currentAction.target == null && currentAction.targetTag != "")
-                    currentAction.target = GameObject.FindWithTag(currentAction.targetTag);
-                
-                if (currentAction.target != null)
-                {
-                    currentAction.running = true;
-                    currentAction.agent.SetDestination(currentAction.target.transform.position);
-                }
+                currentAction.Perform();
             }
             else // Avoid the agent to get stuck in the middle of a plan
             {
                 actionQueue = null;
             }
         }
+
+        //Debug.Log("Status P5");
     }
 }

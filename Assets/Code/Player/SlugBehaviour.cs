@@ -56,6 +56,7 @@ public class SlugBehaviour : MonoBehaviour
     public float JumpForce = 10;
     public float playerAttack;
     public float playerDefence;
+    public ResourceInteraction resourceInteraction;
 
     //Others
     //public SlugStatusUI SlugStatus;
@@ -65,6 +66,7 @@ public class SlugBehaviour : MonoBehaviour
     void Start()
     {
         player = GetComponent<CharacterController>();
+        resourceInteraction = GetComponent<ResourceInteraction>();
         //RigAimDirection = GameObject.Find("Rig 1").GetComponent<Rig>();
     }
 
@@ -240,6 +242,14 @@ public class SlugBehaviour : MonoBehaviour
             terrainHitTimer = 5;
         }
 
+        // Damage received
+        if(hit.collider.CompareTag("damage"))
+        {
+            WeaponItem weaponItem = hit.collider.GetComponent<WeaponItem>();
+            resourceInteraction.agentParams.HP = Mathf.Max(resourceInteraction.agentParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            Debug.Log("Babo hit");
+        }
+
     /*
         if(hit.collider.CompareTag("Salt"))
         {
@@ -257,7 +267,6 @@ public class SlugBehaviour : MonoBehaviour
     //On collision
     private void OnCollisionEnter(Collision collision)
     {
-        
         
         /*
         if (collision.collider.CompareTag("SlimedSaltBullet") || collision.collider.CompareTag("SaltBullet") || collision.collider.CompareTag("DirectSaltBullet"))

@@ -210,6 +210,50 @@ public class RandomMapCreator : MonoBehaviour
                 Instantiate(tmp_go, rlg.getRandomLocation(), Quaternion.identity);
             }
         }
+        else if (tileType == TileType.Crystal)
+        {
+            GameObject crystalPrefab = null;
+            switch (biomeType)
+            {
+                case BiomeType.Forest:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/BlueCrystal00") as GameObject; 
+                    break;
+                case BiomeType.Desert:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/RedCrystal08") as GameObject;
+                    break;
+                case BiomeType.Rocky:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/GemStone00") as GameObject; 
+                    break;
+                case BiomeType.Snowy:
+                    crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/PurpCrystal00") as GameObject;
+                    break;
+            }
+
+            if (crystalPrefab != null)
+            {
+                int numberOfCrystals = 4;
+                for (int i = 0; i < numberOfCrystals; i++)
+                {
+                    GameObject crystalInstance = Instantiate(crystalPrefab, rlg.getRandomLocation(), Quaternion.identity);
+
+                    // Randomize scale
+                    float randomScaleFactor = UnityEngine.Random.Range(3.0f, 4.0f); // Adjust the range as needed
+                    crystalInstance.transform.localScale = new Vector3(randomScaleFactor, randomScaleFactor, randomScaleFactor);
+
+                    // Randomize rotation
+                    float randomRotationX = UnityEngine.Random.Range(0, 360);
+                    float randomRotationY = UnityEngine.Random.Range(0, 360);
+                    float randomRotationZ = UnityEngine.Random.Range(0, 360);
+                    crystalInstance.transform.rotation = Quaternion.Euler(randomRotationX, randomRotationY, randomRotationZ);
+
+                    float liftHeight = 0.02f * randomScaleFactor; // Adjust this value as needed
+                    crystalInstance.transform.position += new Vector3(0, liftHeight, 0);
+                
+            }
+            }
+        }
+
+
     }
 
     private void UpdateMeshVerticesHeights(float[,] heightMap, Mesh mesh, Vector3[] meshVertices, float heightMultiplier)

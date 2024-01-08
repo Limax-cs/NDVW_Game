@@ -7,17 +7,29 @@ using UnityEngine;
 public class WorldState
 {
     public string key;
-    public int value;
+    public float value;
+
+    public WorldState()
+    {
+
+    }
+
+    public WorldState(string key, float value)
+    {
+        this.key = key;
+        this.value = value;
+    }
 }
 
 // Generate the dictionary of states
+[System.Serializable]
 public class WorldStates
 {
-    public Dictionary<string, int> states;
+    public Dictionary<string, float> states;
 
     public WorldStates()
     {
-        states = new Dictionary<string, int>();
+        states = new Dictionary<string, float>();
     }
 
     // Obtain state value
@@ -27,13 +39,13 @@ public class WorldStates
     }
 
     // Add state to the dictionary
-    void AddState(string key, int value)
+    void AddState(string key, float value)
     {
         states.Add(key, value);
     }
 
     // Modify State
-    public void ModifyState(string key, int value)
+    public void ModifyState(string key, float value)
     {
         if(states.ContainsKey(key))
         {
@@ -53,7 +65,7 @@ public class WorldStates
     }
 
     // Set State
-    public void SetState(string key, int value)
+    public void SetState(string key, float value)
     {
         if (states.ContainsKey(key))
             states[key] = value;
@@ -62,7 +74,7 @@ public class WorldStates
     }
 
     // Return States
-    public Dictionary<string, int> GetStates()
+    public Dictionary<string, float> GetStates()
     {
         return states;
     }
