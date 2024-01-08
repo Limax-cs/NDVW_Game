@@ -9,6 +9,11 @@ TagManager:
   - spaceship2
   - spaceship1_item
   - spaceship2_item
+  - Crystal
+  - BlueCrystal
+  - GemCrystal
+  - PurpleCrystal
+  - RedCrystal
   - explorable
   - mole
   - weapon
