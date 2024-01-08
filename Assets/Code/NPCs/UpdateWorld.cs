@@ -30,6 +30,17 @@ public class UpdateWorld : MonoBehaviour
     public GameObject[] weapons;
     public GameObject[] consumables;
 
+    // Crystals
+    public TextMeshProUGUI blueCrystalPlayer;
+    public TextMeshProUGUI gemCrystalPlayer;
+    public TextMeshProUGUI purpleCrystalPlayer;
+    public TextMeshProUGUI redCrystalPlayer;
+
+    public TextMeshProUGUI blueCrystalRival;
+    public TextMeshProUGUI gemCrystalRival;
+    public TextMeshProUGUI purpleCrystalRival;
+    public TextMeshProUGUI redCrystalRival;
+
     void Awake()
     {
         // GOALS STATUS
@@ -186,6 +197,38 @@ public class UpdateWorld : MonoBehaviour
                     }
                     g_image.color = whitea;
                 }
+            }
+            else if (s.Key == "Player Red Crystal Count")
+            {
+                redCrystalPlayer.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Player Purple Crystal Count")
+            {
+                purpleCrystalPlayer.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Player Gem Crystal Count")
+            {
+                gemCrystalPlayer.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Player Blue Crystal Count")
+            {
+                blueCrystalPlayer.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Rival Red Crystal Count")
+            {
+                redCrystalRival.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Rival Purple Crystal Count")
+            {
+                purpleCrystalRival.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Rival Gem Crystal Count")
+            {
+                gemCrystalRival.text = "" + (int)s.Value;
+            }
+            else if (s.Key == "Rival Blue Crystal Count")
+            {
+                blueCrystalRival.text = "" + (int)s.Value;
             }
         }
 
