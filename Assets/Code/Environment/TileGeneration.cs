@@ -117,7 +117,7 @@ public class TileGeneration : MonoBehaviour
         SpawnTileObjects(this.gameObject, currentBiome);
 
         // Generate NavMesh for the tile
-        //surface.BuildNavMesh();
+        surface.BuildNavMesh();
     }
 
     private void UpdateMeshVertices(float[,] heightMap)
