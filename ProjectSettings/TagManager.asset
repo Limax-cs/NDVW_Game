@@ -8,12 +8,23 @@ TagManager:
   - SaltBullet
   - DirectSaltBullet
   - Terrain
+<<<<<<< HEAD
   - CinemachineTarget
   - Metalon
   - Spider
   - Bear
   - Dragon
   - Crab
+=======
+  - X
+  - Y
+  - Z
+  - W
+  - spaceship1
+  - spaceship2
+  - spaceship1_item
+  - spaceship2_item
+>>>>>>> main
   layers:
   - Default
   - TransparentFX

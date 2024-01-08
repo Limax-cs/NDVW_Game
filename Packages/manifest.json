@@ -1,10 +1,19 @@
 {
   "dependencies": {
     "com.unity.ai.navigation": "1.1.5",
+<<<<<<< HEAD
     "com.unity.cinemachine": "2.9.7",
+=======
+    "com.unity.animation.rigging": "1.2.1",
+>>>>>>> main
     "com.unity.collab-proxy": "2.0.7",
+    "com.unity.feature.characters-animation": "1.0.0",
     "com.unity.feature.development": "1.0.1",
+<<<<<<< HEAD
     "com.unity.inputsystem": "1.7.0",
+=======
+    "com.unity.feature.worldbuilding": "1.0.1",
+>>>>>>> main
     "com.unity.textmeshpro": "3.0.6",
     "com.unity.timeline": "1.7.5",
     "com.unity.ugui": "1.0.0",
