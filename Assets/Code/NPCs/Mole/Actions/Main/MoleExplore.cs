@@ -154,10 +154,29 @@ public class MoleExplore : MoleAction
 
     public override float ComputeUtilityScore()
     {
-        if (canExplore)
-            return 0;
-        else
-            return 0;
+        // Extract point distance
+        List<float> exploreDistance = new List<float>();
+        foreach(GameObject eP in toExplorePoints)
+        {
+            NavMeshPath path = new NavMeshPath();
+            bool hasPath = NavMesh.CalculatePath(transform.position, eP.transform.position, NavMesh.AllAreas, path);
+            if (hasPath)
+            {
+                exploreDistance.Add(CalculatePathDistance(path));
+            }
+        }
+
+        // Compute Utility
+        float utilityDistance = 0;
+        foreach(float eD in exploreDistance)
+        {
+            utilityDistance += Mathf.Pow((5/Mathf.Max(5, eD)),3);
+        }
+
+        if (utilityDistance > 1.0f)
+            utilityDistance = 1.0f;
+        
+        return utilityDistance;
     }
 
 

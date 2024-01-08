@@ -290,7 +290,7 @@ public class MoleAggresive : MoleAction
 
     public override float ComputeUtilityScore()
     {
-        return 100f;
+        return 0f;
     }
 
 }

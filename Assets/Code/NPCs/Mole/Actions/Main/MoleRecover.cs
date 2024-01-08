@@ -114,6 +114,10 @@ public class MoleRecover : MoleAction
                                 subplanCost += a.cost;
                             }
 
+                            // Preference to accumulate items
+                            if (!this.beliefs.HasState("Has Mole SSItem " + objectItem.ID))
+                                subplanCost -= 25;
+
                             // Store plan
                             if (subplanCost < cost)
                             {
@@ -290,7 +294,72 @@ public class MoleRecover : MoleAction
 
     public override float ComputeUtilityScore()
     {
-        return 100f;
+        // Extract point distance
+        spaceship_items = GameObject.FindGameObjectsWithTag("spaceship2_item");
+        GameObject spaceship = GameObject.FindGameObjectWithTag("spaceship2");
+
+        List<float> itemScore = new List<float>();
+        List<int> notCollected = new List<int>();
+        List<float> curiosity = new List<float>();
+
+        foreach(GameObject item in spaceship_items)
+        {
+            ObjectItem objectItem = item.GetComponent<ObjectItem>();
+
+            if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
+            {
+                // Has Item
+                if(this.beliefs.HasState("Has Mole SSItem " + objectItem.ID))
+                {
+                    NavMeshPath path = new NavMeshPath();
+                    bool hasPath = NavMesh.CalculatePath(transform.position, item.transform.position, NavMesh.AllAreas, path);
+                    NavMeshPath path2 = new NavMeshPath();
+                    bool hasPath2 = NavMesh.CalculatePath(item.transform.position, spaceship.transform.position, NavMesh.AllAreas, path2);
+                    if (hasPath && hasPath2)
+                    {
+                        itemScore.Add(CalculatePathDistance(path) + CalculatePathDistance(path2));
+                        notCollected.Add(0);
+                    }
+                }
+                // Does not have the item
+                else
+                {
+                    NavMeshPath path2 = new NavMeshPath();
+                    bool hasPath2 = NavMesh.CalculatePath(item.transform.position, spaceship.transform.position, NavMesh.AllAreas, path2);
+                    if (hasPath2)
+                    {
+                        itemScore.Add(CalculatePathDistance(path2));
+                        notCollected.Add(1);
+                    }
+                }
+            }
+        }
+
+        // Compute Utility
+        float utilityScore = 0;
+        for(int k = 0; k < itemScore.Count; k++)
+        {
+            float itemScoreValue = Mathf.Pow((50/Mathf.Max(50, itemScore[k] - 25*notCollected[k])),2);
+            if (utilityScore < itemScoreValue)
+                utilityScore = itemScoreValue;
+        }
+        
+        return utilityScore;
+    }
+
+    public float CalculatePathDistance(NavMeshPath path)
+    {
+        float totalDistance = 0f;
+
+        if (path != null && path.corners.Length > 1)
+        {
+            for (int i = 0; i < path.corners.Length - 1; i++)
+            {
+                totalDistance += Vector3.Distance(path.corners[i], path.corners[i + 1]);
+            }
+        }
+
+        return totalDistance;
     }
 
 }

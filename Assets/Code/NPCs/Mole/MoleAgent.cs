@@ -61,6 +61,7 @@ public class AgentParams
     public List<AgentCuriosity> spaceshipCuriosity;
     public List<AgentCuriosity> weaponCuriosity;
     public List<AgentCuriosity> edibleCuriosity;
+    public List<AgentCuriosity> explorableCuriosity;
 
     public AgentParams(int ID, float HP, float MaxHP)
     {
@@ -73,6 +74,7 @@ public class AgentParams
         this.spaceshipCuriosity = new List<AgentCuriosity>();
         this.weaponCuriosity = new List<AgentCuriosity>();
         this.edibleCuriosity = new List<AgentCuriosity>();
+        this.explorableCuriosity = new List<AgentCuriosity>();
     }
 }
 
@@ -198,6 +200,7 @@ public class MoleAgent : MonoBehaviour
         GameObject[] moles = GameObject.FindGameObjectsWithTag("mole");
         GameObject[] weapons = GameObject.FindGameObjectsWithTag("weapon");
         GameObject[] consumables = GameObject.FindGameObjectsWithTag("consumable");
+        GameObject[] explorable = GameObject.FindGameObjectsWithTag("explorable");
         moleParams.Mood = Random.Range(0.3f, 1.0f);
         moleParams.playerAffection = Random.Range(0.0f, 0.7f);
         
@@ -237,6 +240,15 @@ public class MoleAgent : MonoBehaviour
             agentCuriosity.item = g;
             agentCuriosity.curiosity = generalEdibleCuriosity + Random.Range(0.0f, 0.5f);
             moleParams.edibleCuriosity.Add(agentCuriosity);
+        }
+
+        float generalExploreCuriosity = Random.Range(0.0f, 0.5f);
+        foreach(GameObject g in explorable)
+        {
+            AgentCuriosity agentCuriosity = new AgentCuriosity();
+            agentCuriosity.item = g;
+            agentCuriosity.curiosity = generalExploreCuriosity + Random.Range(0.0f, 0.5f);
+            moleParams.explorableCuriosity.Add(agentCuriosity);
         }
 
     }
@@ -420,6 +432,13 @@ public class MoleAgent : MonoBehaviour
             actionScores[k] = actions[k].ComputeUtilityScore();
             totalScore += actionScores[k];
         }
+
+        string utilitiesValue = "";
+        for(int k=0; k < actions.Count; k++)
+        {
+            utilitiesValue += actions[k].actionName + ": " + Mathf.Round(10000*actionScores[k])/100 + "%; ";
+        }
+        Debug.Log("Agent " + moleParams.ID + " - Utilities: " + utilitiesValue);
 
         if (totalScore > 0)
         {
