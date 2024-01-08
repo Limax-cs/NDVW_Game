@@ -72,7 +72,6 @@ public class RandomMapCreator : MonoBehaviour
         multipliers[BiomeType.Forest] = 4.5f;
         multipliers[BiomeType.Desert] = 0.8f;
         multipliers[BiomeType.Rocky] = 17.5f;
-        multipliers[BiomeType.Empty] = 1.0f;
         multipliers[BiomeType.Snowy] = 3.5f;
 
         return multipliers;
@@ -110,10 +109,6 @@ public class RandomMapCreator : MonoBehaviour
             case BiomeType.Snowy:
                 heightMultiplier = 2.5f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Snow_BaseColor") as Texture2D;
-                break;
-            case BiomeType.Empty:
-                heightMultiplier = 1.0f;
-                myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
                 break;
             default:
                 heightMultiplier = 1.0f;
