@@ -271,6 +271,9 @@ public class MoleAgent : MonoBehaviour
 
         // Update Agent Params
         this.UpdateAgentParams();
+
+        // Kill the agent
+        this.Kill();
     }
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -535,4 +538,25 @@ public class MoleAgent : MonoBehaviour
             Debug.Log("Mole Hit");
         }
     }
+
+    public void Kill()
+    {
+        if (this.moleParams.HP <= 0)
+        {
+            for(int k= 0; k < this.backpack.Count; k++)
+            {
+                if (this.backpack[k] != null)
+                {
+                    this.MakeVisible(k);
+                    this.backpack[k].transform.SetParent(null);
+                    this.backpack[k] = null;
+
+                }
+            }
+
+            Destroy(this.gameObject);
+        }
+    }
 }
+
+
