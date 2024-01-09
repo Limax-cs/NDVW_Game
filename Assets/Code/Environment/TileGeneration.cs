@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using UnityEngine;
 using Unity.AI.Navigation;
+using UnityEngine.AI;
 using System.Linq;
 
 //[System.Serializable]
@@ -40,6 +41,11 @@ public class TileGeneration : MonoBehaviour
     [SerializeField]
     public NavMeshSurface surface;
 
+    [SerializeField]
+    private GameObject explorePointPrefab;
+
+    [SerializeField]
+    private NavMeshAgent navMeshAgent;
     //[SerializeField]
     //private AnimationCurve heightCurve;
 
@@ -108,7 +114,6 @@ public class TileGeneration : MonoBehaviour
                 break;
         }
 
-        //Texture2D tileTexture = BuildTexture(heightMap);
         this.tileRenderer.material.mainTexture = myTexture;
 
         UpdateMeshVertices(heightMap);
@@ -118,6 +123,7 @@ public class TileGeneration : MonoBehaviour
 
         // Generate NavMesh for the tile
         surface.BuildNavMesh();
+        //navMeshAgent.NavMeshOwner = surface;
     }
 
     private void UpdateMeshVertices(float[,] heightMap)
@@ -162,6 +168,11 @@ public class TileGeneration : MonoBehaviour
         float raycastOffset = 50f;
 
         string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
+        int explorePointsPerBiome = 30;
+        Vector3 spawnLoc;
+        Vector3 raycastStart;
+        RaycastHit hit;
+
         if (biomeType == BiomeType.Forest)
         {
             for(int i = 0; i < 40; i++)
@@ -169,22 +180,22 @@ public class TileGeneration : MonoBehaviour
                 for (int item_index = 1; item_index <= 2; item_index++)
                 {
                     GameObject tmp_go = Resources.Load("Handpainted_Forest_pack/Models/Fir_v1_" + item_index) as GameObject;
-                    Vector3 loc = rlg.getRandomLocation();
+                    spawnLoc = rlg.getRandomLocation();
 
                     // Adjust the raycast starting position above the tile
-                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+                    raycastStart = new Vector3(spawnLoc.x, tileGameObject.transform.position.y + raycastOffset, spawnLoc.z);
 
-                    RaycastHit hit;
                     if (Physics.Raycast(raycastStart, castDirection, out hit))
                     {
-                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        spawnLoc = hit.point; // Set the location to the point where the ray hits the surface
                         if (biomeTags.Contains(hit.collider.gameObject.tag))
                         {
-                            Instantiate(tmp_go, loc, Quaternion.identity);
+                            Instantiate(tmp_go, spawnLoc, Quaternion.identity);
                         }
                     }
                 }
             }
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Handpainted_Forest_pack/Models/Fir_v1_");
         }
         else if (biomeType == BiomeType.Desert)
@@ -194,23 +205,22 @@ public class TileGeneration : MonoBehaviour
                 for (int item_index = 1; item_index <= 4; item_index++)
                 {
                     GameObject tmp_go = Resources.Load("Free_Rocks/_prefabs/rock" + item_index) as GameObject;
-                    Vector3 loc = rlg.getRandomLocation();
+                    spawnLoc = rlg.getRandomLocation();
 
                     // Adjust the raycast starting position above the tile
-                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+                    raycastStart = new Vector3(spawnLoc.x, tileGameObject.transform.position.y + raycastOffset, spawnLoc.z);
 
-                    RaycastHit hit;
                     if (Physics.Raycast(raycastStart, castDirection, out hit))
                     {
-                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        spawnLoc = hit.point; // Set the location to the point where the ray hits the surface
                         if (biomeTags.Contains(hit.collider.gameObject.tag))
                         {
-                            Instantiate(tmp_go, loc, Quaternion.identity);
+                            Instantiate(tmp_go, spawnLoc, Quaternion.identity);
                         }
                     }
                 }
             }
-            
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 30, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Snowy)
@@ -220,23 +230,22 @@ public class TileGeneration : MonoBehaviour
                 for (int item_index = 1; item_index <= 3; item_index++)
                 {
                     GameObject tmp_go = Resources.Load("Handpainted_Forest_pack/Models/Grass_v1_" + item_index) as GameObject;
-                    Vector3 loc = rlg.getRandomLocation();
+                    spawnLoc = rlg.getRandomLocation();
 
                     // Adjust the raycast starting position above the tile
-                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+                    raycastStart = new Vector3(spawnLoc.x, tileGameObject.transform.position.y + raycastOffset, spawnLoc.z);
 
-                    RaycastHit hit;
                     if (Physics.Raycast(raycastStart, castDirection, out hit))
                     {
-                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        spawnLoc = hit.point; // Set the location to the point where the ray hits the surface
                         if (biomeTags.Contains(hit.collider.gameObject.tag))
                         {
-                            Instantiate(tmp_go, loc, Quaternion.identity);
+                            Instantiate(tmp_go, spawnLoc, Quaternion.identity);
                         }
                     }
                 }
             }
-            
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 20, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Rocky)
@@ -246,23 +255,41 @@ public class TileGeneration : MonoBehaviour
                 for (int item_index = 1; item_index <= 4; item_index++)
                 {
                     GameObject tmp_go = Resources.Load("Free_Rocks/_prefabs/rock" + item_index) as GameObject;
-                    Vector3 loc = rlg.getRandomLocation();
+                    spawnLoc = rlg.getRandomLocation();
 
                     // Adjust the raycast starting position above the tile
-                    Vector3 raycastStart = new Vector3(loc.x, tileGameObject.transform.position.y + raycastOffset, loc.z);
+                    raycastStart = new Vector3(spawnLoc.x, tileGameObject.transform.position.y + raycastOffset, spawnLoc.z);
 
-                    RaycastHit hit;
                     if (Physics.Raycast(raycastStart, castDirection, out hit))
                     {
-                        loc = hit.point; // Set the location to the point where the ray hits the surface
+                        spawnLoc = hit.point; // Set the location to the point where the ray hits the surface
                         if (biomeTags.Contains(hit.collider.gameObject.tag))
                         {
-                            Instantiate(tmp_go, loc, Quaternion.identity);
+                            Instantiate(tmp_go, spawnLoc, Quaternion.identity);
                         }
                     }
                 }
             }
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Free_Rocks/_prefabs/rock");
+        }
+    }
+
+    private void spawnExplorePoints(int desiredAmount, RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
+    {
+        for (int i = 0; i < desiredAmount; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, this.gameObject.transform.position.y + raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 1.5f, 0.0f); // Set the location to the point where the ray hits the surface
+                if (biomeTags.Contains(hit.collider.gameObject.tag))
+                {
+                    Instantiate(explorePointPrefab, spawnLoc, Quaternion.identity);
+                }
+            }
         }
     }
 

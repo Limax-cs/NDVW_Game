@@ -204,7 +204,10 @@ public class LevelGeneration : MonoBehaviour
                 UnityEngine.Debug.Log(tilePosition);
                 // instantiate a new Tile
                 GameObject tile = Instantiate(tilePrefab, tilePosition, Quaternion.identity) as GameObject;
-                
+                //if (xTileIndex == mapWidthInTiles - 1 && zTileIndex == mapDepthInTiles - 1)
+                //{
+                //    tile.GetComponent<NavMeshSurface>().BuildNavMesh();
+                //}
             }
         }
         //Destroy(tilePrefab);
