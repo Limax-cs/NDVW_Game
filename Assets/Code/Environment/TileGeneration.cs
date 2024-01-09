@@ -7,13 +7,6 @@ using Unity.AI.Navigation;
 using UnityEngine.AI;
 using System.Linq;
 
-//[System.Serializable]
-//public class TerrainType
-//{
-//    public string name;
-//    public float height;
-//    public Color color;
-//}
 
 public class TileGeneration : MonoBehaviour
 {
