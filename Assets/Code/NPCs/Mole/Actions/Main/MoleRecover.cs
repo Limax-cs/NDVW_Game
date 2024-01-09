@@ -90,7 +90,7 @@ public class MoleRecover : MoleAction
                     ObjectItem objectItem = item.GetComponent<ObjectItem>();
 
                     // Ensure that the item was detected before doing any plan
-                    if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
+                    if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && (GWorld.Instance.GetWorld().HasState("Available Mole SSItem " + objectItem.ID) || this.beliefs.HasState("Has Mole SSItem " + objectItem.ID)) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
                     {
                         //Debug.Log("Mole " + this.agentParams.ID + " - Plan for recovering SSItem " + objectItem.ID );
 
@@ -306,7 +306,7 @@ public class MoleRecover : MoleAction
         {
             ObjectItem objectItem = item.GetComponent<ObjectItem>();
 
-            if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
+            if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && (GWorld.Instance.GetWorld().HasState("Available Mole SSItem " + objectItem.ID) || this.beliefs.HasState("Has Mole SSItem " + objectItem.ID)) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
             {
                 // Has Item
                 if(this.beliefs.HasState("Has Mole SSItem " + objectItem.ID))

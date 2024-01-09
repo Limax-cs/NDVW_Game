@@ -194,6 +194,11 @@ public class MoleAgent : MonoBehaviour
         actions.Add(aggressive);
         actionScores.Add(0.0f);
 
+        // Instantiate Spaceship recovery actions
+        MoleCuriosity curiosity = this.gameObject.AddComponent<MoleCuriosity>();
+        actions.Add(curiosity);
+        actionScores.Add(0.0f);
+
         // UPDATE AGENT PARAMS
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         GameObject[] player_goals = GameObject.FindGameObjectsWithTag("spaceship1_item");
