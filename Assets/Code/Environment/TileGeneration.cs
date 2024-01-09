@@ -1,3 +1,6 @@
+// CREDIT FOR BASIS OF PCG SYSTEM: 
+// https://gamedevacademy.org/complete-guide-to-procedural-level-generation-in-unity-part-1/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -81,12 +84,12 @@ public class TileGeneration : MonoBehaviour
         switch (currentBiome)
         {
             case BiomeType.Forest:
-                //heightMultiplier = 2.5f;
+                //this.heightMultiplier = 3.0f;
                 myTexture = Resources.Load("Textures/terrainFloor") as Texture2D;
                 this.tag = "Forest";
                 break;
             case BiomeType.Desert:
-                //heightMultiplier = 1.0f;
+                //this.heightMultiplier = 1.0f;
                 myTexture = Resources.Load("TerrainSampleAssets/Textures/Terrain/Sand_BaseColor") as Texture2D;
                 this.tag = "Desert";
                 break;
@@ -117,6 +120,8 @@ public class TileGeneration : MonoBehaviour
         // Generate NavMesh for the tile
         surface.BuildNavMesh();
         //navMeshAgent.NavMeshOwner = surface;
+
+        //spawnMole();
     }
 
     private void UpdateMeshVertices(float[,] heightMap)
