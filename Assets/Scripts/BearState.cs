@@ -155,9 +155,15 @@ public class BearController : MonoBehaviour
         // Check if player is fleeing
         if (PlayerIsFleeing())
         {
+            animator.SetTrigger("Buff");
             currentState = BearState.Idle;
             animator.SetBool("Attack1", false);
+            animator.ResetTrigger("Buff");
         }
+
+        // Face the player at all times
+        Vector3 lookAtPlayer = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(lookAtPlayer);
     }
 
     // You need to implement this method based on how your game detects the player fleeing.

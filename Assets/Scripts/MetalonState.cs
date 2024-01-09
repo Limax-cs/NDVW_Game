@@ -138,6 +138,10 @@ public class MetalonController : MonoBehaviour
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackDistance);
                 bool playerHit = false;
 
+                animator.SetTrigger("Stab Attack");
+                attackTimer -= Time.deltaTime;
+                animator.ResetTrigger("Stab Attack");
+
                 foreach (var hitCollider in hitColliders)
                 {
                     if (hitCollider.CompareTag("Player"))

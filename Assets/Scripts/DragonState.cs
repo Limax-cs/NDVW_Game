@@ -35,7 +35,7 @@ public class DragonState{
     public float rotationSpeed = 2f;
     public float collisionAvoidanceDistance = 5f; 
     public Vector2 boundaryX = new Vector2(-125f, 125f);
-    public Vector2 boundaryY = new Vector2(20f, 100f);
+    public Vector2 boundaryY = new Vector2(30f, 120f);
     public Vector2 boundaryZ = new Vector2(0f, 250f);
 
     float visDist = 10.0f;

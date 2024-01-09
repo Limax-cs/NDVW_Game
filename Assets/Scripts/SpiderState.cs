@@ -99,6 +99,10 @@ public class SpiderController : MonoBehaviour
         // Stop the walking animation
         animator.SetBool("IsWalking", false);
 
+        // Face the player at all times
+        Vector3 lookAtPlayer = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(lookAtPlayer);
+
         currentState = SpiderState.Attack;
     }
 }
@@ -109,6 +113,9 @@ public class SpiderController : MonoBehaviour
         animator.SetBool("IsStabbing", true);
         // Move towards the player
         transform.position = Vector3.MoveTowards(transform.position, player.position, attackSpeed * Time.deltaTime);
+
+        animator.SetBool("IsStabbing", false);
+        currentState = SpiderState.Flee;
 
         // Check if player is defending
         if (currentHits == 2)
@@ -121,6 +128,10 @@ public class SpiderController : MonoBehaviour
         {
             currentState = SpiderState.Flee;
         }
+
+        // Face the player at all times
+        Vector3 lookAtPlayer = new Vector3(player.position.x, transform.position.y, player.position.z);
+        transform.LookAt(lookAtPlayer);
     }
 
     void Defend()
