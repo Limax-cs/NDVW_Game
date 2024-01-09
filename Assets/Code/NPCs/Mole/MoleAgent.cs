@@ -495,10 +495,13 @@ public class MoleAgent : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = true;
-            //Collider coll = backpack[item].GetComponent<Collider>();
-            //coll.enabled = true;
+
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = true;
+            }
+            
             backpack[item].GetComponent<Collider>().GetComponent<Highlight>()?.ToggleHighLight(false);
         }
     }
@@ -507,8 +510,12 @@ public class MoleAgent : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = false;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = false;
+            }
+
             //Collider coll = backpack[item].GetComponent<Collider>();
             //coll.enabled = false;
         }

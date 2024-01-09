@@ -59,7 +59,7 @@ public class MoleCuriosity : MoleAction
 
     public void LateUpdate()
     {
-        /*
+        
         // If no plan, create a new plan
         if (plan)
         {
@@ -72,17 +72,31 @@ public class MoleCuriosity : MoleAction
             {
                 // Get item description
                 string identification = "";
-                ObjectItem objectItem = item.GetComponent<ObjectItem>();
+                if (target_item.GetComponent<ObjectItem>())
+                {
+                    ObjectItem objectItem = target_item.GetComponent<ObjectItem>();
+                    identification = "Babo SSItem " + objectItem.ID;
+                }
+                else if (target_item.GetComponent<WeaponItem>())
+                {
+                    WeaponItem weaponItem = target_item.GetComponent<WeaponItem>();
+                    identification = "Weapon " + weaponItem.weaponDescrib.ID;
+                }
+                else if (target_item.GetComponent<WeaponItem>())
+                {
+                    EdibleItem edibleItem = target_item.GetComponent<EdibleItem>();
+                    identification = "Edible " + edibleItem.edibleDescrib.ID;
+                }
+                
 
                 // Ensure that the item was detected before doing any plan
-                if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID))
+                if (this.beliefs.HasState("Detect " + identification) && GWorld.Instance.GetWorld().HasState("Available " + identification))
                 {
                     //Debug.Log("Mole " + this.agentParams.ID + " - Plan for recovering SSItem " + objectItem.ID );
 
                     // Configure actions
-                    ObjectItem objectItem = item.GetComponent<ObjectItem>();
-                    WorldState collectableItem = new WorldState("Collectable Mole SSItem " + objectItem.ID, 1);
-                    WorldState hasItem = new WorldState("Has Mole SSItem " + objectItem.ID, 1);
+                    WorldState collectableItem = new WorldState("Collectable " + identification, 1);
+                    WorldState hasItem = new WorldState("Has " + identification, 1);
 
                     // -- Go To Spaceship Item
                     goToGoalItem.SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
@@ -93,7 +107,7 @@ public class MoleCuriosity : MoleAction
                     goToGoalItemEffects.Add(collectableItem);
                     goToGoalItem.target = target_item;
                     goToGoalItem.distance = 3.0f;
-                    goToGoalItem.beliefTrigger = "Collectable Mole SSItem " + objectItem.ID;
+                    goToGoalItem.beliefTrigger = "Collectable " + identification;
                     goToGoalItem.UpdateConditions(goToGoalItemPrecond, goToGoalItemEffects);
                     goToGoalItem.CalculateReachability(this.transform.position);
 
@@ -101,21 +115,22 @@ public class MoleCuriosity : MoleAction
                     collectItem.SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
                                         this.targetDirection, this.pickableLayerMask, this.hit, this.centerBias, this.pickUpParent, this.pickUpParentStatic,
                                         this.range, this.agentParams);
-                    collectItem.target = item;
+                    collectItem.target = target_item;
                     collectItem.UpdateConditions(new List<WorldState>(), new List<WorldState>());
 
                     // -- Drop Any Item
-                    // --
+                    dropAnyItem.SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
+                                        this.targetDirection, this.pickableLayerMask, this.hit, this.centerBias, this.pickUpParent, this.pickUpParentStatic,
+                                        this.range, this.agentParams);
 
                     // SubGoal
-                    SubGoal recoverItemGoal = new SubGoal("Recover " + objectItem.ID, 1, true);
+                    SubGoal hasItemGoal = new SubGoal("Has " + identification, 1, true);
 
                     // Plan
-                    Queue<MoleAction> actionQueueItem = this.RunSubPlan(recoverItemGoal, subactions);
+                    Queue<MoleAction> actionQueueItem = this.RunSubPlan(hasItemGoal, subactions);
 
                     if (actionQueueItem != null)
                     {
-                        Debug.Log("Mole " + this.agentParams.ID + " - Found a plan for SSItem " + objectItem.ID );
 
                         // Compute Plan Cost
                         float subplanCost = 0;
@@ -129,19 +144,19 @@ public class MoleCuriosity : MoleAction
                         canCollect = true;
                         cost = subplanCost;
                         actionQueue = actionQueueItem;
-                        currentGoal = recoverItemGoal;
+                        currentGoal = hasItemGoal;
 
                         // Update preconditions and effects
-                        WorldState recoverItem = new WorldState("Recover " + objectItem.ID, 1);
-                        WorldState detectItem = new WorldState("Detect Mole SSItem " + objectItem.ID, 1);
+                        WorldState detectItem = new WorldState("Detect " + identification, 1);
+                        WorldState availableItem = new WorldState("Available " + identification, 1);
 
-                        this.preConditions = new WorldState[]{detectItem};
-                        this.afterEffects = new WorldState[]{recoverItem};
+                        this.preConditions = new WorldState[]{detectItem, availableItem};
+                        this.afterEffects = new WorldState[]{hasItem};
                         this.preconditions.Clear();
-                        this.preconditions.Add("Detect Mole SSItem " + objectItem.ID, 1);
+                        this.preconditions.Add("Detect " + identification, 1);
                         this.effects.Clear();
-                        this.effects.Add("Recover " + objectItem.ID, 1);
-                        this.actionName = "Recover " + objectItem.ID;
+                        this.effects.Add("Has " + identification, 1);
+                        this.actionName = "Has " + identification;
                     }
                 }
             }
@@ -153,7 +168,7 @@ public class MoleCuriosity : MoleAction
 
             plan = false;
 
-        }*/
+        }
     }
 
 
@@ -207,10 +222,27 @@ public class MoleCuriosity : MoleAction
             // If close enough, look at the object
             if(target_item != null)
             {
+
+                string identification = "";
+                if (target_item.GetComponent<ObjectItem>())
+                {
+                    ObjectItem objectItem = target_item.GetComponent<ObjectItem>();
+                    identification = "Babo SSItem " + objectItem.ID;
+                }
+                else if (target_item.GetComponent<WeaponItem>())
+                {
+                    WeaponItem weaponItem = target_item.GetComponent<WeaponItem>();
+                    identification = "Weapon " + weaponItem.weaponDescrib.ID;
+                }
+                else if (target_item.GetComponent<WeaponItem>())
+                {
+                    EdibleItem edibleItem = target_item.GetComponent<EdibleItem>();
+                    identification = "Edible " + edibleItem.edibleDescrib.ID;
+                }
+
                 //Debug.Log("Target Item: " + target_item);
-                ObjectItem objectItem = target_item.GetComponent<ObjectItem>();
                 if((Vector3.Distance(this.transform.position, target_item.transform.position) < this.range) && 
-                    !(this.beliefs.HasState("Has Mole SSItem " + objectItem.ID)))
+                    !(this.beliefs.HasState("Has " + identification)))
                     this.targetDirection.transform.position = target_item.transform.position;
                 else
                     this.targetDirection.transform.localPosition = new Vector3(0.0f, 0.5f, 3.0f);

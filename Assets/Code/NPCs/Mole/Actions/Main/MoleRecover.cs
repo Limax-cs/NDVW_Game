@@ -22,7 +22,7 @@ public class MoleRecover : MoleAction
     private MoleGoToX goToBase;
     private MoleUseX applyItem;
     private MoleCollectX collectItem;
-    //private DropAny dropAnyItem;
+    private MoleDropAny dropAnyItem;
     public List<MoleAction> subactions;
 
 
@@ -63,12 +63,16 @@ public class MoleRecover : MoleAction
         collectItem = this.gameObject.AddComponent<MoleCollectX>();
         collectItem.actionName = "Collect Spaceship Item";
 
+        dropAnyItem = this.gameObject.AddComponent<MoleDropAny>();
+        dropAnyItem.actionName = "Drop Any Item";
+
         // Add actions to list
         subactions = new List<MoleAction>();
         subactions.Add(goToGoalItem);
         subactions.Add(collectItem);
         subactions.Add(applyItem);
         subactions.Add(goToBase);
+        subactions.Add(dropAnyItem);
     }
 
     public void LateUpdate()
@@ -220,7 +224,9 @@ public class MoleRecover : MoleAction
         collectItem.UpdateConditions(new List<WorldState>(), new List<WorldState>());
 
         // -- Drop Any Item
-        // --
+        dropAnyItem.SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
+                                        this.targetDirection, this.pickableLayerMask, this.hit, this.centerBias, this.pickUpParent, this.pickUpParentStatic,
+                                        this.range, this.agentParams);
         
     }
 

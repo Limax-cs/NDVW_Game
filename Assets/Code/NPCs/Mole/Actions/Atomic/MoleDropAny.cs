@@ -60,6 +60,8 @@ public class MoleDropAny : MoleAction
             Vector3 preconditionPos = new Vector3(0.0f, 0.0f, 0.0f);
             Vector3 conditionPos = new Vector3(0.0f, 0.0f, 0.0f);
 
+            /*
+
             if (conditions.ContainsKey("Agent X POS"))
                 conditionPos[0] = conditions["Agent X POS"];
             if (conditions.ContainsKey("Agent Y POS"))
@@ -72,7 +74,7 @@ public class MoleDropAny : MoleAction
             if (preconditions.ContainsKey("Agent Y POS"))
                 preconditionPos[1] = preconditions["Agent Y POS"];
             if (preconditions.ContainsKey("Agent Z POS"))
-                preconditionPos[2] = preconditions["Agent Z POS"];
+                preconditionPos[2] = preconditions["Agent Z POS"];*/
 
             foreach (KeyValuePair<string, float> p in preconditions)
             {
@@ -81,8 +83,8 @@ public class MoleDropAny : MoleAction
             }
 
             //Debug.Log("Distance: " + Vector3.Distance(preconditionPos, conditionPos));
-            if (Vector3.Distance(preconditionPos, conditionPos) > 4.0f)
-                return false;
+            //if (Vector3.Distance(preconditionPos, conditionPos) > 4.0f)
+            //    return false;
             return true;
         }
         else

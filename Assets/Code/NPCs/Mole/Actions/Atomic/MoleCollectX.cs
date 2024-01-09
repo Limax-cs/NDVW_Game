@@ -44,6 +44,22 @@ public class MoleCollectX : MoleAction
                 collectableItem.key = "Collectable Mole SSItem " + objectItem.ID;
                 hasItem.key = "Has Mole SSItem " + objectItem.ID;
             }
+            else if (target.tag == "weapon")
+            {
+                WeaponItem weaponItem = target.GetComponent<WeaponItem>();
+
+                detectedItem.key = "Detect Weapon " + weaponItem.weaponDescrib.ID;
+                collectableItem.key = "Collectable Weapon " + weaponItem.weaponDescrib.ID;
+                hasItem.key = "Has Weapon " + weaponItem.weaponDescrib.ID;
+            }
+            else if (target.tag == "consumable")
+            {
+                EdibleItem edibleItem = target.GetComponent<EdibleItem>();
+
+                detectedItem.key = "Detect Edible " + edibleItem.edibleDescrib.ID;
+                collectableItem.key = "Collectable Edible " + edibleItem.edibleDescrib.ID;
+                hasItem.key = "Has Edible " + edibleItem.edibleDescrib.ID;
+            }
             detectedItem.value = 1;
             collectableItem.value = 1;
             hasItem.value = 1;
