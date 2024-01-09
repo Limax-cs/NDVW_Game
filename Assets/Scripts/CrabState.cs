@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum CrabState
 {
+    Idle,
     Roaming,
     Attack,
     Defend,
@@ -23,16 +24,20 @@ public class CrabController : MonoBehaviour
     private Transform player;
     private Animator anim;
     private int currentHits = 0;
-    private CrabState currentState = CrabState.Roaming;
+    private CrabState currentState = CrabState.Idle;
     private Animator animator;
     private Vector3 randomDestination;
     private float timer = 0.0f;
+
+    private float idleDuration = 60f; 
+    private float idleStartTime;
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         animator = GetComponent<Animator>();
-        SetRandomDestination();
+        // SetRandomDestination();
+        idleStartTime = Time.time; // Record the start time of the idle state
     }
 
     void Update()
@@ -40,6 +45,9 @@ public class CrabController : MonoBehaviour
         Debug.Log("Crab current state: "+ currentState);
         switch (currentState)
         {
+            case CrabState.Idle:
+                Idle();
+                break;
             case CrabState.Roaming:
                 Roam();
                 break;
@@ -56,6 +64,13 @@ public class CrabController : MonoBehaviour
                 Die();
                 break;
         }
+    }
+
+    void Idle(){
+        if (Time.time - idleStartTime >= idleDuration) {
+            currentState = CrabState.Roaming;
+        }
+        // 
     }
 
     void Roam()

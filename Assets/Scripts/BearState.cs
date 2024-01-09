@@ -135,8 +135,21 @@ public class BearController : MonoBehaviour
     void Attack()
     {
         animator.SetBool("Attack1", true);
-        // Move towards the player
-        transform.position = Vector3.MoveTowards(transform.position, player.position, attackSpeed * Time.deltaTime);
+        // Determine the direction from the object to the player
+        Vector3 directionToPlayer = (player.position - transform.position).normalized;
+
+        // Set a desired distance from the player
+        float distanceFromPlayer = 3.0f; // Adjust this value as needed
+
+
+        Vector3 playerPosition = new Vector3(player.position.x, player.position.y - 0.0f, player.position.z);
+
+
+        // Calculate the new target position in front of the player
+        Vector3 targetPosition = playerPosition - directionToPlayer * distanceFromPlayer;
+
+        // Move towards the target position
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);
 
         // Check if player is defending
         if (currentHits == 2)

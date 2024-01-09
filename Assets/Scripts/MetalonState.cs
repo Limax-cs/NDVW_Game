@@ -122,44 +122,93 @@ public class MetalonController : MonoBehaviour
         switch (attackSubState)
         {
             case AttackSubState.Approaching:
+                animator.ResetTrigger("Stab Attack");
                 Debug.Log("AttackSubState.Approaching");
                 animator.SetTrigger("Walk Forward");
 
                 animator.SetTrigger("Stab Attack");
-                animator.ResetTrigger("Stab Attack");
-                // Move towards the player
-                transform.position = Vector3.MoveTowards(transform.position, player.position, attackSpeed * Time.deltaTime);
+                // animator.ResetTrigger("Stab Attack");
+                // Determine the direction from the object to the player
+                Vector3 directionToPlayer = (player.position - transform.position).normalized;
+
+                // Set a desired distance from the player
+                float distanceFromPlayer = 4.0f; // Adjust this value as needed
+
+                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+
+                Vector3 playerPosition = new Vector3(player.position.x, player.position.y - 0.58f, player.position.z);
+
+
+                // Calculate the new target position in front of the player
+                Vector3 targetPosition = playerPosition - directionToPlayer * distanceFromPlayer;
+
+                // Move towards the target position
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, attackSpeed * Time.deltaTime);
 
                 // Check for attack range using raycast
-                RaycastHit hit;
-                Vector3 direction = player.position - transform.position;
-                Debug.DrawRay(transform.position, direction * attackDistance, Color.red);
+                // RaycastHit hit;
+                // Vector3 direction = player.position - transform.position;
+                // Debug.DrawRay(transform.position, direction * attackDistance, Color.red);
 
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackDistance);
+                // Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackDistance);
                 bool playerHit = false;
 
-                animator.SetTrigger("Stab Attack");
-                attackTimer -= Time.deltaTime;
-                animator.ResetTrigger("Stab Attack");
+                // animator.SetTrigger("Stab Attack");
+                // attackTimer -= Time.deltaTime;
+                // animator.ResetTrigger("Stab Attack");
 
-                foreach (var hitCollider in hitColliders)
+                // foreach (var hitCollider in hitColliders)
+                // {
+                //     if (hitCollider.CompareTag("Player"))
+                //     {
+                //         animator.SetTrigger("Smash Attack");
+                //         playerHit = true;
+                //         // The player is hit, apply damage
+                //         PlayerController playerController = hitCollider.GetComponent<PlayerController>();
+                //         if (playerController != null)
+                //         {
+                //             Debug.Log("Damaging player");
+                //             playerController.TakeDamage(1);
+                //             // After dealing damage, Metalon backs off
+                //             animator.ResetTrigger("Smash Attack");
+                //             attackSubState = AttackSubState.BackingOff;
+                //         }
+                //         break; // Exit the loop as we've found our target
+                //     }
+                // } 
+
+                // Check if the player is within attack range
+                if (distanceToPlayer <= 3.01f)
                 {
-                    if (hitCollider.CompareTag("Player"))
+                    animator.ResetTrigger("Walk Forward");
+                    animator.SetBool("Defend", true);
+                    // The player is within range, trigger the attack
+                    animator.SetTrigger("Smash Attack");
+
+                    // Check if the attack animation is playing
+                    if (animator.GetCurrentAnimatorStateInfo(0).IsName("Smash Attack") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
                     {
-                        animator.SetTrigger("Smash Attack");
-                        playerHit = true;
+                        // Animation has finished, transition to next state
+                        
                         // The player is hit, apply damage
-                        PlayerController playerController = hitCollider.GetComponent<PlayerController>();
+                        PlayerController playerController = player.GetComponent<PlayerController>();
                         if (playerController != null)
                         {
                             Debug.Log("Damaging player");
                             playerController.TakeDamage(1);
-                            // After dealing damage, Metalon backs off
+                            // After dealing damage, back off
                             animator.ResetTrigger("Smash Attack");
                             attackSubState = AttackSubState.BackingOff;
                         }
-                        break; // Exit the loop as we've found our target
                     }
+
+                    
+                }
+                else
+                {
+                    // Player is not in range, reset the attack trigger
+                    animator.ResetTrigger("Smash Attack");
                 }
 
                 // If the player was hit, reset the attack
