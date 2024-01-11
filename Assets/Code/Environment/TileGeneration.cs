@@ -171,6 +171,7 @@ public class TileGeneration : MonoBehaviour
         Vector3 raycastStart;
         RaycastHit hit;
 
+        GameObject crystalPrefab = null;
         if (biomeType == BiomeType.Forest)
         {
             for(int i = 0; i < 40; i++)
@@ -194,6 +195,8 @@ public class TileGeneration : MonoBehaviour
                 }
             }
             spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/BlueCrystal00") as GameObject; 
+            spawnCrystals(crystalPrefab, rlg);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Handpainted_Forest_pack/Models/Fir_v1_");
         }
         else if (biomeType == BiomeType.Desert)
@@ -219,6 +222,8 @@ public class TileGeneration : MonoBehaviour
                 }
             }
             spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/RedCrystal08") as GameObject;
+            spawnCrystals(crystalPrefab, rlg);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 30, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Snowy)
@@ -244,6 +249,8 @@ public class TileGeneration : MonoBehaviour
                 }
             }
             spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/GemStone00") as GameObject; 
+            spawnCrystals(crystalPrefab, rlg);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 20, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Rocky)
@@ -268,9 +275,12 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/PurpCrystal00") as GameObject;
+            spawnCrystals(crystalPrefab, rlg);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Free_Rocks/_prefabs/rock");
         }
+        
     }
 
     private void spawnExplorePoints(int desiredAmount, RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
@@ -289,6 +299,34 @@ public class TileGeneration : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void spawnCrystals(GameObject crystalPrefab, RandomLocationGenerator rlg)
+    {
+        int numberOfCrystals = 40;
+        for (int i = 0; i < numberOfCrystals; i++)
+        {
+            GameObject crystalInstance = Instantiate(crystalPrefab, rlg.getRandomLocation(), Quaternion.identity);
+
+            // Randomize scale
+            float randomScaleFactor = UnityEngine.Random.Range(3.0f, 4.0f); // Adjust the range as needed
+            crystalInstance.transform.localScale = new Vector3(randomScaleFactor, randomScaleFactor, randomScaleFactor);
+
+            // Randomize rotation
+            float randomRotationX = UnityEngine.Random.Range(0, 360);
+            float randomRotationY = UnityEngine.Random.Range(0, 360);
+            float randomRotationZ = UnityEngine.Random.Range(0, 360);
+            crystalInstance.transform.rotation = Quaternion.Euler(randomRotationX, randomRotationY, randomRotationZ);
+
+            float liftHeight = 0.02f * randomScaleFactor; // Adjust this value as needed
+
+            RaycastHit hit;
+            if (Physics.Raycast(crystalInstance.transform.position, Vector3.down, out hit))
+            {
+                crystalInstance.transform.position = hit.point + new Vector3(0, liftHeight, 0); // Set the location to the point where the ray hits the surface
+
+            }
+        } 
     }
 
     //private void BatchSpawnTileObjects(GameObject tileGameObject, BiomeType biomeType, int itemCount, string prefabPath)
