@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using UnityEngine;
 using Unity.AI.Navigation;
 using System.Diagnostics;
+using System.Linq;
 
 public class LevelGeneration : MonoBehaviour
 {
@@ -16,9 +17,30 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField]
     public int tileScale = 1;
 
-    void Start()
+    public GameObject base1Prefab;
+    public GameObject base2Prefab;
+    private bool instantiateBases = false;
+
+    [SerializeField]
+    public NavMeshSurface surface;
+
+    void Awake()
     {
         GenerateMap();
+        spawnBases();
+        //instantiateBases = true;
+        surface.BuildNavMesh();
+    }
+
+    void Update()
+    {
+        /*
+        if (!instantiateBases)
+        {
+            spawnBases();
+            instantiateBases = true;
+            surface.BuildNavMesh();
+        }*/
     }
 
     void GenerateMap()
@@ -54,5 +76,56 @@ public class LevelGeneration : MonoBehaviour
         
         //GameObject firstTile = GameObject.Find("Level Tile(Clone)");
         //firstTile.GetComponent<NavMeshSurface>().BuildNavMesh();
+    }
+
+    private void spawnBases()
+    {
+        // Extract tile size
+        Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
+        int tileWidth = (int)tileSize.x;
+        int tileDepth = (int)tileSize.z;
+
+        Vector3 origin = new Vector3((float)tileWidth*mapWidthInTiles/2, 0.0f, (float)tileDepth*mapDepthInTiles/2);
+        RandomLocationGenerator rlg = new RandomLocationGenerator(origin, (int)2*tileWidth, (int)2*tileDepth);
+        Vector3 castDirection = Vector3.down;
+        float raycastOffset = 50f;
+        string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
+
+        // Spaceship positions
+        Vector3 spawnLoc1 = rlg.getRandomLocation();
+        Vector3 spawnLoc2 = rlg.getRandomLocation();
+        if (Vector3.Distance(spawnLoc1, spawnLoc2) < 50)
+        {
+            Vector3 locDiff = spawnLoc1 - spawnLoc2;
+            spawnLoc1 = spawnLoc1 - 25*locDiff.normalized; 
+            spawnLoc2 = spawnLoc2 + 25*locDiff.normalized;
+        }
+        UnityEngine.Debug.Log("Base 1: " + spawnLoc1);
+        UnityEngine.Debug.Log("Base 2: " + spawnLoc2);
+
+
+        // Spaceship Location
+        Vector3 raycastStart = new Vector3(spawnLoc1.x, raycastOffset, spawnLoc1.z);
+        RaycastHit hit;
+        if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+        {
+            UnityEngine.Debug.Log("Base 1");
+            spawnLoc1 = hit.point + new Vector3(0.0f, 0.0f, 0.0f); // Set the location to the point where the ray hits the surface
+            if (biomeTags.Contains(hit.collider.gameObject.tag))
+            {
+                Instantiate(base1Prefab, spawnLoc1, Quaternion.FromToRotation(Vector3.up, hit.normal));
+            }
+        }
+
+        raycastStart = new Vector3(spawnLoc2.x, raycastOffset, spawnLoc2.z);
+        if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+        {
+            UnityEngine.Debug.Log("Base 2");
+            spawnLoc2 = hit.point + new Vector3(0.0f, 0.0f, 0.0f); // Set the location to the point where the ray hits the surface
+            if (biomeTags.Contains(hit.collider.gameObject.tag))
+            {
+                Instantiate(base2Prefab, spawnLoc2, Quaternion.FromToRotation(Vector3.up, hit.normal));
+            }
+        }
     }
 }

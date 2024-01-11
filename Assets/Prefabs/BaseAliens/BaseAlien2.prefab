@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 360311808178024600}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.06, z: 0}
+  m_LocalPosition: {x: 2.8499985, y: 5.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityPrefab: {fileID: 2898412481628847007, guid: 4e4587af5d5616944a241e333969d446, type: 3}
-  numEntities: 0
+  numEntities: 2
   spawnPeriodically: 0
 --- !u!1 &767521352054774019
 GameObject:
@@ -149,7 +149,7 @@ Transform:
   m_GameObject: {fileID: 767521352054774019}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalPosition: {x: 2.8499985, y: 2, z: 0}
   m_LocalScale: {x: 35, y: 5, z: 35}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 5236463607267032216}
   - component: {fileID: 6737898065389455764}
   - component: {fileID: 7302011276752181535}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ramp2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,8 +361,8 @@ Transform:
   m_GameObject: {fileID: 5750295193791805067}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9455186, z: -0.32556805, w: 0}
-  m_LocalPosition: {x: -1.25, y: 0.201, z: -2.781}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalPosition: {x: -1.25, y: -0.74, z: -3.98}
+  m_LocalScale: {x: 1, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5398801330161961152}
@@ -463,7 +463,7 @@ Transform:
   m_GameObject: {fileID: 5793873261588114711}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 2.85, y: 0, z: 0}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -487,7 +487,7 @@ GameObject:
   - component: {fileID: 2726105128941708675}
   - component: {fileID: 3717734244872827524}
   - component: {fileID: 2826635195589266466}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 6571481738146098455}
   - component: {fileID: 6397799392924887512}
   - component: {fileID: 5781761978292055143}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Ramp1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -747,8 +747,8 @@ Transform:
   m_GameObject: {fileID: 8527306578965917835}
   serializedVersion: 2
   m_LocalRotation: {x: 0.3257331, y: 0, z: 0, w: 0.9454618}
-  m_LocalPosition: {x: -1.25, y: 0.21, z: 2.791}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalPosition: {x: -1.25, y: -0.71, z: 3.97}
+  m_LocalScale: {x: 1, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5398801330161961152}

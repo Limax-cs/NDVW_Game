@@ -49,7 +49,7 @@ public class TileGeneration : MonoBehaviour
     private Wave[] waves;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         GenerateTile();
     }
@@ -118,7 +118,7 @@ public class TileGeneration : MonoBehaviour
         SpawnTileObjects(this.gameObject, currentBiome);
 
         // Generate NavMesh for the tile
-        surface.BuildNavMesh();
+        //surface.BuildNavMesh();
         //navMeshAgent.NavMeshOwner = surface;
 
         //spawnMole();
@@ -268,7 +268,7 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Free_Rocks/_prefabs/rock");
         }
     }
@@ -282,7 +282,7 @@ public class TileGeneration : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(raycastStart, Vector3.down, out hit))
             {
-                spawnLoc = hit.point + new Vector3(0.0f, 1.5f, 0.0f); // Set the location to the point where the ray hits the surface
+                spawnLoc = hit.point + new Vector3(0.0f, 0.5f, 0.0f); // Set the location to the point where the ray hits the surface
                 if (biomeTags.Contains(hit.collider.gameObject.tag))
                 {
                     Instantiate(explorePointPrefab, spawnLoc, Quaternion.identity);

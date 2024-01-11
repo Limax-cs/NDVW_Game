@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33329208472481430}
   - component: {fileID: 23955697145852868}
   - component: {fileID: -258267797357155550}
+  - component: {fileID: 643177408601747335}
   m_Layer: 0
   m_Name: Fir_v1_2
   m_TagString: Untagged
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: 11513268302b562498f3c140346b22c8, type: 3}
+--- !u!208 &643177408601747335
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1975661288262788}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 1, y: 3.713, z: 1}
+  m_MoveThreshold: 0.02
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 3.693, z: 0}
+  m_TimeToStationary: 0.5
