@@ -19,6 +19,10 @@ TagManager:
   - weapon
   - consumable
   - damage
+  - Rocky
+  - Snowy
+  - Desert
+  - Forest
   layers:
   - Default
   - TransparentFX
