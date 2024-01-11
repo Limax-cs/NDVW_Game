@@ -232,5 +232,62 @@ public class UpdateWorld : MonoBehaviour
             }
         }
 
+        // Available items
+        GameObject[] spaceship1_items = GameObject.FindGameObjectsWithTag("spaceship1_item");
+        foreach(GameObject g in spaceship1_items)
+        {
+            ObjectItem objectItem = g.GetComponent<ObjectItem>();
+            if(g.transform.parent == null)
+            {
+                GWorld.Instance.GetWorld().SetState("Available Babo SSItem " + objectItem.ID, 1);
+            }
+            else
+            {
+                GWorld.Instance.GetWorld().RemoveState("Available Babo SSItem " + objectItem.ID);
+            }
+        }
+
+        GameObject[] spaceship2_items = GameObject.FindGameObjectsWithTag("spaceship2_item");
+        foreach(GameObject g in spaceship2_items)
+        {
+            ObjectItem objectItem = g.GetComponent<ObjectItem>();
+            if(g.transform.parent == null)
+            {
+                GWorld.Instance.GetWorld().SetState("Available Mole SSItem " + objectItem.ID, 1);
+            }
+            else
+            {
+                GWorld.Instance.GetWorld().RemoveState("Available Mole SSItem " + objectItem.ID);
+            }
+        }
+
+        GameObject[] weapon_items = GameObject.FindGameObjectsWithTag("weapon");
+        foreach(GameObject g in weapon_items)
+        {
+            WeaponItem weaponItem = g.GetComponent<WeaponItem>();
+            if(g.transform.parent == null)
+            {
+                GWorld.Instance.GetWorld().SetState("Available Weapon " + weaponItem.weaponDescrib.ID, 1);
+            }
+            else
+            {
+                GWorld.Instance.GetWorld().RemoveState("Available Weapon " + weaponItem.weaponDescrib.ID);
+            }
+        }
+
+        GameObject[] edible_items = GameObject.FindGameObjectsWithTag("consumable");
+        foreach(GameObject g in edible_items)
+        {
+            EdibleItem edibleItem = g.GetComponent<EdibleItem>();
+            if(g.transform.parent == null)
+            {
+                GWorld.Instance.GetWorld().SetState("Available Edible " + edibleItem.edibleDescrib.ID, 1);
+            }
+            else
+            {
+                GWorld.Instance.GetWorld().RemoveState("Available Edible " + edibleItem.edibleDescrib.ID);
+            }
+        }
+
     }
 }

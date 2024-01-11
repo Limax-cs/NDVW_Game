@@ -194,6 +194,11 @@ public class MoleAgent : MonoBehaviour
         actions.Add(aggressive);
         actionScores.Add(0.0f);
 
+        // Instantiate Spaceship recovery actions
+        MoleCuriosity curiosity = this.gameObject.AddComponent<MoleCuriosity>();
+        actions.Add(curiosity);
+        actionScores.Add(0.0f);
+
         // UPDATE AGENT PARAMS
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         GameObject[] player_goals = GameObject.FindGameObjectsWithTag("spaceship1_item");
@@ -266,6 +271,9 @@ public class MoleAgent : MonoBehaviour
 
         // Update Agent Params
         this.UpdateAgentParams();
+
+        // Kill the agent
+        this.Kill();
     }
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -490,10 +498,13 @@ public class MoleAgent : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = true;
-            //Collider coll = backpack[item].GetComponent<Collider>();
-            //coll.enabled = true;
+
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = true;
+            }
+            
             backpack[item].GetComponent<Collider>().GetComponent<Highlight>()?.ToggleHighLight(false);
         }
     }
@@ -502,8 +513,12 @@ public class MoleAgent : MonoBehaviour
     {
         if (backpack[item] != null)
         {
-            MeshRenderer mr = backpack[item].GetComponent<MeshRenderer>();
-            mr.enabled = false;
+            Renderer[] mrs = backpack[item].GetComponentsInChildren<Renderer>();
+            foreach(Renderer mr in mrs)
+            {
+                mr.enabled = false;
+            }
+
             //Collider coll = backpack[item].GetComponent<Collider>();
             //coll.enabled = false;
         }
@@ -523,4 +538,25 @@ public class MoleAgent : MonoBehaviour
             Debug.Log("Mole Hit");
         }
     }
+
+    public void Kill()
+    {
+        if (this.moleParams.HP <= 0)
+        {
+            for(int k= 0; k < this.backpack.Count; k++)
+            {
+                if (this.backpack[k] != null)
+                {
+                    this.MakeVisible(k);
+                    this.backpack[k].transform.SetParent(null);
+                    this.backpack[k] = null;
+
+                }
+            }
+
+            Destroy(this.gameObject);
+        }
+    }
 }
+
+
