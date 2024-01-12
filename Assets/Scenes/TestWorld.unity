@@ -39,7 +39,6 @@ RenderSettings:
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
   m_IndirectSpecularColor: {r: 0.67936057, g: 0.73288685, b: 0.8046859, a: 1}
-  m_IndirectSpecularColor: {r: 0.67936057, g: 0.73288685, b: 0.8046859, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3213,6 +3212,36 @@ MonoBehaviour:
   - seed: 6712
     frequency: 0.25
     amplitude: 4
+  forestNPCsPrefab:
+  - {fileID: 1783563462218004, guid: 7f931d4b5c97d194d8726ddf5acdd440, type: 3}
+  - {fileID: 1462720695320296, guid: e9a03d46b76afe246a9ffd58d255bb65, type: 3}
+  - {fileID: 1128758269040250, guid: f88c6ad57910d8648807bcf0c131f49d, type: 3}
+  - {fileID: 7962199819078159310, guid: f5b41ba4c79702547a89de7544b80656, type: 3}
+  - {fileID: 5128811620208064792, guid: e42dce10de392fb46b7cf553d7658cf4, type: 3}
+  - {fileID: 8390785030945888294, guid: 31ecbe2a1041ed848a499132cd1b1460, type: 3}
+  - {fileID: 110427889724667761, guid: 740728f854d793848a530ac50ca86174, type: 3}
+  desertNPCsPrefab:
+  - {fileID: 1703160672665336, guid: 51a5e06934e40e1468d0367239466bc4, type: 3}
+  - {fileID: 1494583877365688, guid: 8431058aa84a65044bbe46298ab86574, type: 3}
+  - {fileID: 1517330249523152, guid: f0612f9ade4945544b78e7b155ade161, type: 3}
+  - {fileID: 1783563462218004, guid: 7f931d4b5c97d194d8726ddf5acdd440, type: 3}
+  - {fileID: 1462720695320296, guid: e9a03d46b76afe246a9ffd58d255bb65, type: 3}
+  - {fileID: 1128758269040250, guid: f88c6ad57910d8648807bcf0c131f49d, type: 3}
+  rockNPCsPrefab:
+  - {fileID: 1703160672665336, guid: 51a5e06934e40e1468d0367239466bc4, type: 3}
+  - {fileID: 1494583877365688, guid: 8431058aa84a65044bbe46298ab86574, type: 3}
+  - {fileID: 1783563462218004, guid: 7f931d4b5c97d194d8726ddf5acdd440, type: 3}
+  - {fileID: 1462720695320296, guid: e9a03d46b76afe246a9ffd58d255bb65, type: 3}
+  - {fileID: 1128758269040250, guid: f88c6ad57910d8648807bcf0c131f49d, type: 3}
+  - {fileID: 5128811620208064792, guid: e42dce10de392fb46b7cf553d7658cf4, type: 3}
+  - {fileID: 8390785030945888294, guid: 31ecbe2a1041ed848a499132cd1b1460, type: 3}
+  - {fileID: 110427889724667761, guid: 740728f854d793848a530ac50ca86174, type: 3}
+  snowNPCsPrefab:
+  - {fileID: 1703160672665336, guid: 51a5e06934e40e1468d0367239466bc4, type: 3}
+  - {fileID: 1494583877365688, guid: 8431058aa84a65044bbe46298ab86574, type: 3}
+  - {fileID: 7962199819078159310, guid: f5b41ba4c79702547a89de7544b80656, type: 3}
+  entitiesPerTileMin: 0
+  entitiesPerTileMax: 6
 --- !u!114 &968223689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5319,6 +5348,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 766311793627137414, guid: d471574d22e48544d9e000e4eb12b931, type: 3}
+      propertyPath: orthographic size
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 766311793627137414, guid: d471574d22e48544d9e000e4eb12b931, type: 3}
       propertyPath: m_CullingMask.m_Bits
       value: 497
       objectReference: {fileID: 0}
@@ -5369,6 +5402,10 @@ PrefabInstance:
     - target: {fileID: 7039366227242603692, guid: d471574d22e48544d9e000e4eb12b931, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7916842244694300976, guid: d471574d22e48544d9e000e4eb12b931, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 70
       objectReference: {fileID: 0}
     - target: {fileID: 8107084679791753058, guid: d471574d22e48544d9e000e4eb12b931, type: 3}
       propertyPath: status

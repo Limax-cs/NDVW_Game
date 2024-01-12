@@ -1238,6 +1238,7 @@ GameObject:
   - component: {fileID: 2556834439228547865}
   - component: {fileID: 6359083790876850578}
   - component: {fileID: 7689589345626449312}
+  - component: {fileID: 5146450256417677003}
   m_Layer: 7
   m_Name: bdl_byx
   m_TagString: Crab
@@ -1421,6 +1422,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef770996172fce948aafc9701afe1de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5146450256417677003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1517330249523152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0daba4cf9f2290546a4d4ffd6e1c33df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roamSpeed: 2
+  attackSpeed: 4
+  fleeSpeed: 5
+  roamTime: 3
+  attackDistance: 3
+  maxHits: 4
 --- !u!1 &1536241510600882
 GameObject:
   m_ObjectHideFlags: 0

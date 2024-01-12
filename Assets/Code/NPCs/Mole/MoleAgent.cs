@@ -138,6 +138,7 @@ public class MoleAgent : MonoBehaviour
     //Agent Awareness
     public GameObject SenseArea;
     public MoleSenseV2 moleSensing;
+    private int updateCount = 0;
 
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -263,14 +264,20 @@ public class MoleAgent : MonoBehaviour
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     void LateUpdate()
     {
-        // Update Beliefs
-        this.UpdateBeliefs();
+        updateCount = updateCount + 1;
+        if (updateCount > 20)
+        {
+            // Update Beliefs
+            this.UpdateBeliefs();
 
-        // Utility System
-        this.UtilitySystem();
+            // Utility System
+            this.UtilitySystem();
 
-        // Update Agent Params
-        this.UpdateAgentParams();
+            // Update Agent Params
+            this.UpdateAgentParams();
+
+            updateCount = 0;
+        }
 
         // Kill the agent
         this.Kill();

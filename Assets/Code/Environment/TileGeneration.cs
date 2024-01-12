@@ -55,6 +55,19 @@ public class TileGeneration : MonoBehaviour
     [SerializeField]
     private Wave[] waves;
 
+    [SerializeField]
+    private List<GameObject> forestNPCsPrefab;
+    [SerializeField]
+    private List<GameObject> desertNPCsPrefab;
+    [SerializeField]
+    private List<GameObject> rockNPCsPrefab;
+    [SerializeField]
+    private List<GameObject> snowNPCsPrefab;
+    [SerializeField]
+    private int entitiesPerTileMin = 0;
+    [SerializeField]
+    private int entitiesPerTileMax = 8;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -181,6 +194,10 @@ public class TileGeneration : MonoBehaviour
         GameObject crystalPrefab = null;
         if (biomeType == BiomeType.Forest)
         {
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/BlueCrystal00") as GameObject; 
+            spawnCrystals(crystalPrefab, rlg);
+
             for(int i = 0; i < 40; i++)
             {
                 for (int item_index = 1; item_index <= 2; item_index++)
@@ -201,14 +218,17 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
-            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/BlueCrystal00") as GameObject; 
-            spawnCrystals(crystalPrefab, rlg);
+            
             spawnWeapons(weaponPerTile, rlg, 50.0f, biomeTags);
+            spawnForestEntity(rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Handpainted_Forest_pack/Models/Fir_v1_");
         }
         else if (biomeType == BiomeType.Desert)
         {
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/RedCrystal08") as GameObject;
+            spawnCrystals(crystalPrefab, rlg);
+
             for (int i = 0; i < 40; i++)
             {
                 for (int item_index = 1; item_index <= 4; item_index++)
@@ -229,14 +249,15 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
-            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/RedCrystal08") as GameObject;
-            spawnCrystals(crystalPrefab, rlg);
             spawnWeapons(weaponPerTile, rlg, 50.0f, biomeTags);
+            spawnDesertEntity(rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 30, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Snowy)
         {
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/GemStone00") as GameObject; 
+            spawnCrystals(crystalPrefab, rlg);
             for(int i = 0; i < 60; i++)
             {
                 for (int item_index = 1; item_index <= 3; item_index++)
@@ -257,14 +278,16 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
-            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/GemStone00") as GameObject; 
-            spawnCrystals(crystalPrefab, rlg);
             spawnWeapons(weaponPerTile, rlg, 50.0f, biomeTags);
+            spawnSnowEntity(rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 20, "Free_Rocks/_prefabs/rock");
         }
         else if (biomeType == BiomeType.Rocky)
         {
+            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
+            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/PurpCrystal00") as GameObject;
+            spawnCrystals(crystalPrefab, rlg);
+            
             for (int i = 0; i < 80; i++)
             {
                 for (int item_index = 1; item_index <= 4; item_index++)
@@ -285,10 +308,8 @@ public class TileGeneration : MonoBehaviour
                     }
                 }
             }
-            spawnExplorePoints(explorePointsPerBiome, rlg, 50.0f, biomeTags);
-            crystalPrefab = Resources.Load("Toon Crystals pack/Prefabs/PurpCrystal00") as GameObject;
-            spawnCrystals(crystalPrefab, rlg);
             spawnWeapons(weaponPerTile, rlg, 50.0f, biomeTags);
+            spawnRockyEntity(rlg, 50.0f, biomeTags);
             //BatchSpawnTileObjects(tileGameObject, biomeType, 40, "Free_Rocks/_prefabs/rock");
         }
         
@@ -358,6 +379,87 @@ public class TileGeneration : MonoBehaviour
                         Instantiate(weaponPrefab[weaponIdx], spawnLoc, Quaternion.identity);
                     } 
                 }
+            }
+        }
+    }
+
+    // Entities
+    private void spawnForestEntity(RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
+    {
+        int entities = UnityEngine.Random.Range(entitiesPerTileMin, entitiesPerTileMax);
+        for (int i = 0; i < entities; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, this.gameObject.transform.position.y + raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 1.0f, 0.0f); // Set the location to the point where the ray hits the surface
+                if ((forestNPCsPrefab.Count > 0)  && biomeTags.Contains(hit.collider.gameObject.tag))
+                {
+                    int entityIdx = UnityEngine.Random.Range(0, forestNPCsPrefab.Count);
+                    Instantiate(forestNPCsPrefab[entityIdx], spawnLoc, Quaternion.identity);
+                } 
+            }
+        }
+    }
+
+    private void spawnDesertEntity(RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
+    {
+        int entities = UnityEngine.Random.Range(entitiesPerTileMin, entitiesPerTileMax);
+        for (int i = 0; i < entities; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, this.gameObject.transform.position.y + raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 1.0f, 0.0f); // Set the location to the point where the ray hits the surface
+                if ((desertNPCsPrefab.Count > 0) && biomeTags.Contains(hit.collider.gameObject.tag))
+                {
+                    int entityIdx = UnityEngine.Random.Range(0, desertNPCsPrefab.Count);
+                    Instantiate(desertNPCsPrefab[entityIdx], spawnLoc, Quaternion.identity);
+                } 
+            }
+        }
+    }
+
+    private void spawnRockyEntity(RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
+    {
+        int entities = UnityEngine.Random.Range(entitiesPerTileMin, entitiesPerTileMax);
+        for (int i = 0; i < entities; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, this.gameObject.transform.position.y + raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 1.0f, 0.0f); // Set the location to the point where the ray hits the surface
+                if ((rockNPCsPrefab.Count > 0) && biomeTags.Contains(hit.collider.gameObject.tag))
+                {
+                    int entityIdx = UnityEngine.Random.Range(0, rockNPCsPrefab.Count);
+                    Instantiate(rockNPCsPrefab[entityIdx], spawnLoc, Quaternion.identity);
+                } 
+            }
+        }
+    }
+
+    private void spawnSnowEntity(RandomLocationGenerator rlg, float raycastOffset, string[] biomeTags)
+    {
+        int entities = UnityEngine.Random.Range(entitiesPerTileMin, entitiesPerTileMax);
+        for (int i = 0; i < entities; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, this.gameObject.transform.position.y + raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 1.0f, 0.0f); // Set the location to the point where the ray hits the surface
+                if ((snowNPCsPrefab.Count > 0) && biomeTags.Contains(hit.collider.gameObject.tag))
+                {
+                    int entityIdx = UnityEngine.Random.Range(0, snowNPCsPrefab.Count);
+                    Instantiate(snowNPCsPrefab[entityIdx], spawnLoc, Quaternion.identity);
+                } 
             }
         }
     }
