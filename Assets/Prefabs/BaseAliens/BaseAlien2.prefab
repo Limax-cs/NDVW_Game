@@ -119,7 +119,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityPrefab: {fileID: 2898412481628847007, guid: 4e4587af5d5616944a241e333969d446, type: 3}
-  numEntities: 3
+  numEntities: 1
   spawnPeriodically: 0
 --- !u!1 &767521352054774019
 GameObject:

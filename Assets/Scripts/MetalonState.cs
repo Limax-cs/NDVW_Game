@@ -378,6 +378,21 @@ public class MetalonController : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, attackDistance);
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Metalon Hit");
+        Debug.Log("Collider Tag: " + collision.gameObject.tag);
+        //Debug.Log("Metalon Hit");
+        if (collision.gameObject.tag == "damage")
+        {
+            //WeaponItem weaponItem = collision.collider.GetComponent<WeaponItem>();
+            //moleParams.HP = Mathf.Max(moleParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            //Debug.Log("Mole Hit");
+            Debug.Log("Metalon Hit");
+            currentHits++;
+        }
+    }
 }
 
 

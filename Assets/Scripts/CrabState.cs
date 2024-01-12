@@ -170,6 +170,20 @@ public class CrabController : MonoBehaviour
     {
         currentState = newState;
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Crab Hit");
+        Debug.Log("Collider Tag: " + collision.gameObject.tag);
+        //Debug.Log("Crab Hit");
+        if (collision.gameObject.tag == "damage")
+        {
+            //WeaponItem weaponItem = collision.collider.GetComponent<WeaponItem>();
+            //moleParams.HP = Mathf.Max(moleParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            Debug.Log("Crab Hit");
+            currentHits++;
+        }
+    }
 }
 
 

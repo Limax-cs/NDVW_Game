@@ -264,20 +264,14 @@ public class MoleAgent : MonoBehaviour
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
     void LateUpdate()
     {
-        updateCount = updateCount + 1;
-        if (updateCount > 20)
-        {
-            // Update Beliefs
-            this.UpdateBeliefs();
+        // Update Beliefs
+        this.UpdateBeliefs();
+        
+        // Utility System
+        this.UtilitySystem();
 
-            // Utility System
-            this.UtilitySystem();
-
-            // Update Agent Params
-            this.UpdateAgentParams();
-
-            updateCount = 0;
-        }
+        // Update Agent Params
+        this.UpdateAgentParams();
 
         // Kill the agent
         this.Kill();
@@ -434,49 +428,58 @@ public class MoleAgent : MonoBehaviour
 
     public void UtilitySystem()
     {
-        // Extract the utility score
-        float totalScore = 0;
-        for(int k=0; k < actions.Count; k++)
+        updateCount = updateCount + 1;
+        if (updateCount > 30)
         {
-            // Set agent params
-            actions[k].SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
-                            this.targetDirection, this.pickableLayerMask, this.hit, this.centerBias, this.pickUpParent, this.pickUpParentStatic,
-                            this.range, this.moleParams);
-
-            // Extract utility score
-            actionScores[k] = actions[k].ComputeUtilityScore();
-            totalScore += actionScores[k];
-        }
-
-        string utilitiesValue = "";
-        for(int k=0; k < actions.Count; k++)
-        {
-            utilitiesValue += actions[k].actionName + ": " + Mathf.Round(10000*actionScores[k])/100 + "%; ";
-        }
-        //Debug.Log("Agent " + moleParams.ID + " - Utilities: " + utilitiesValue);
-
-        if (totalScore > 0)
-        {
-            // Select the action
-            float randVal = UnityEngine.Random.Range(0f, totalScore);
-            float cumScore = 0;
+            // Extract the utility score
+            float totalScore = 0;
             for(int k=0; k < actions.Count; k++)
             {
-                if((randVal >= cumScore) && (randVal <= cumScore + actionScores[k]))
-                {
-                    currentAction = actions[k];
-                    break;
-                }
-                cumScore += actionScores[k];
+                // Set agent params
+                actions[k].SetAgentStatus(this.goals, this.beliefs, this.backpack, this.indexItem,
+                                this.targetDirection, this.pickableLayerMask, this.hit, this.centerBias, this.pickUpParent, this.pickUpParentStatic,
+                                this.range, this.moleParams);
+
+                // Extract utility score
+                actionScores[k] = actions[k].ComputeUtilityScore();
+                totalScore += actionScores[k];
             }
 
-            // Perform the action
+            string utilitiesValue = "";
+            for(int k=0; k < actions.Count; k++)
+            {
+                utilitiesValue += actions[k].actionName + ": " + Mathf.Round(10000*actionScores[k])/100 + "%; ";
+            }
+            //Debug.Log("Agent " + moleParams.ID + " - Utilities: " + utilitiesValue);
+
+            if (totalScore > 0)
+            {
+                // Select the action
+                float randVal = UnityEngine.Random.Range(0f, totalScore);
+                float cumScore = 0;
+                for(int k=0; k < actions.Count; k++)
+                {
+                    if((randVal >= cumScore) && (randVal <= cumScore + actionScores[k]))
+                    {
+                        currentAction = actions[k];
+                        break;
+                    }
+                    cumScore += actionScores[k];
+                }
+            }
+            else
+            {
+                Debug.Log("Mole " + moleParams.ID + " - No action available");
+                currentAction = null;
+            }
+
+            updateCount = 0;
+        }
+            
+        // Perform the action
+        if (currentAction != null)
             currentAction.Perform();
-        }
-        else
-        {
-            Debug.Log("Mole " + moleParams.ID + " - No action available");
-        }
+
 
         
     }

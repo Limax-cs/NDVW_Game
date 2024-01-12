@@ -1152,6 +1152,8 @@ GameObject:
   - component: {fileID: 9021689423330498391}
   - component: {fileID: 6403992574994908795}
   - component: {fileID: 6219405643169339402}
+  - component: {fileID: 1137114663504032674}
+  - component: {fileID: 72313159195266168}
   m_Layer: 7
   m_Name: Polygonal Metalon Green
   m_TagString: Metalon
@@ -1373,6 +1375,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef770996172fce948aafc9701afe1de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1137114663504032674
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783563462218004}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.0442157, y: 1.883214, z: 3.2759147}
+  m_Center: {x: 0.12079167, y: 0.981549, z: -0.25122952}
+--- !u!54 &72313159195266168
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1783563462218004}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1804318802084684
 GameObject:
   m_ObjectHideFlags: 0

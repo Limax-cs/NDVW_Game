@@ -303,6 +303,21 @@ public class BearController : MonoBehaviour
         }
 
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Bear Hit");
+        Debug.Log("Collider Tag: " + collision.gameObject.tag);
+        //Debug.Log("Bear Hit");
+        if (collision.gameObject.tag == "damage")
+        {
+            //WeaponItem weaponItem = collision.collider.GetComponent<WeaponItem>();
+            //moleParams.HP = Mathf.Max(moleParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            //Debug.Log("Mole Hit");
+            Debug.Log("Bear Hit");
+            currentHits++;
+        }
+    }
 }
 
 
