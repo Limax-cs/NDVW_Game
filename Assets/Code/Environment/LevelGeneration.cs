@@ -24,12 +24,23 @@ public class LevelGeneration : MonoBehaviour
     [SerializeField]
     public NavMeshSurface surface;
 
+    [SerializeField]
+    private List<GameObject> spaceship1Prefab;
+
+    [SerializeField]
+    private List<GameObject> spaceship2Prefab;
+
+    [SerializeField]
+    private int items2collect = 4;
+
+
     void Awake()
     {
         GenerateMap();
-        spawnBases();
         //instantiateBases = true;
+        spawnBases();
         surface.BuildNavMesh();
+        spawnItems();
     }
 
     void Update()
@@ -81,12 +92,14 @@ public class LevelGeneration : MonoBehaviour
     private void spawnBases()
     {
         // Extract tile size
-        Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size;
+        Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size * tileScale;
         int tileWidth = (int)tileSize.x;
         int tileDepth = (int)tileSize.z;
 
         Vector3 origin = new Vector3((float)tileWidth*mapWidthInTiles/2, 0.0f, (float)tileDepth*mapDepthInTiles/2);
-        RandomLocationGenerator rlg = new RandomLocationGenerator(origin, (int)2*tileWidth, (int)2*tileDepth);
+        //Vector3 origin = new Vector3(0.0f, 0.0f, 0.0f);
+        UnityEngine.Debug.Log("Origin: " + origin + " | Base Width: " + tileWidth*(mapWidthInTiles-1.5f) + " | Base Depth: " + (int)(tileDepth*(mapDepthInTiles-1.5f)));
+        RandomLocationGenerator rlg = new RandomLocationGenerator(origin, (int)(tileWidth*(mapWidthInTiles-1.5f)), (int)(tileDepth*(mapWidthInTiles-1.5f)));
         Vector3 castDirection = Vector3.down;
         float raycastOffset = 50f;
         string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
@@ -111,10 +124,8 @@ public class LevelGeneration : MonoBehaviour
         {
             UnityEngine.Debug.Log("Base 1");
             spawnLoc1 = hit.point + new Vector3(0.0f, 0.0f, 0.0f); // Set the location to the point where the ray hits the surface
-            if (biomeTags.Contains(hit.collider.gameObject.tag))
-            {
-                Instantiate(base1Prefab, spawnLoc1, Quaternion.FromToRotation(Vector3.up, hit.normal));
-            }
+            Instantiate(base1Prefab, spawnLoc1, Quaternion.FromToRotation(Vector3.up, hit.normal));
+            
         }
 
         raycastStart = new Vector3(spawnLoc2.x, raycastOffset, spawnLoc2.z);
@@ -122,9 +133,59 @@ public class LevelGeneration : MonoBehaviour
         {
             UnityEngine.Debug.Log("Base 2");
             spawnLoc2 = hit.point + new Vector3(0.0f, 0.0f, 0.0f); // Set the location to the point where the ray hits the surface
-            if (biomeTags.Contains(hit.collider.gameObject.tag))
+            Instantiate(base2Prefab, spawnLoc2, Quaternion.FromToRotation(Vector3.up, hit.normal));
+            
+        }
+    }
+
+    private void spawnItems()
+    {
+        // Extract tile size
+        Vector3 tileSize = tilePrefab.GetComponent<MeshRenderer>().bounds.size * tileScale;
+        int tileWidth = (int)tileSize.x;
+        int tileDepth = (int)tileSize.z;
+
+        Vector3 origin = new Vector3((float)tileWidth*mapWidthInTiles/2, 0.0f, (float)tileDepth*mapDepthInTiles/2);
+        RandomLocationGenerator rlg = new RandomLocationGenerator(origin, (int)(tileWidth*(mapWidthInTiles-1.5f)), (int)(tileDepth*(mapWidthInTiles-1.5f)));
+        Vector3 castDirection = Vector3.down;
+        float raycastOffset = 50f;
+        string[] biomeTags = { "Desert", "Forest", "Snowy", "Rocky" };
+
+
+        // Babo Team
+        for (int i = 0; i < items2collect; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
             {
-                Instantiate(base2Prefab, spawnLoc2, Quaternion.FromToRotation(Vector3.up, hit.normal));
+                spawnLoc = hit.point + new Vector3(0.0f, 10f, 0.0f); // Set the location to the point where the ray hits the surface
+                if (spaceship1Prefab.Count > 0)
+                {
+                    int spaceshipIdx = UnityEngine.Random.Range(0, spaceship1Prefab.Count);
+                    Instantiate(spaceship1Prefab[spaceshipIdx], spawnLoc, Quaternion.identity);
+                } 
+                
+            }
+        }
+
+        // Mole Team
+        for (int i = 0; i < items2collect; i++)
+        {
+            Vector3 spawnLoc = rlg.getRandomLocation();
+            Vector3 raycastStart = new Vector3(spawnLoc.x, raycastOffset, spawnLoc.z);
+            RaycastHit hit;
+            if (Physics.Raycast(raycastStart, Vector3.down, out hit))
+            {
+                spawnLoc = hit.point + new Vector3(0.0f, 10f, 0.0f); // Set the location to the point where the ray hits the surface
+                if (spaceship2Prefab.Count > 0)
+                {
+                    UnityEngine.Debug.Log("C");
+                    int spaceshipIdx = UnityEngine.Random.Range(0, spaceship2Prefab.Count);
+                    Instantiate(spaceship2Prefab[spaceshipIdx], spawnLoc, Quaternion.identity);
+                } 
+                
             }
         }
     }

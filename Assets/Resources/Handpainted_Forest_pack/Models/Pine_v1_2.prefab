@@ -12,13 +12,13 @@ GameObject:
   - component: {fileID: 33762945485787438}
   - component: {fileID: 23386149888012990}
   - component: {fileID: -5795530443579358846}
-  - component: {fileID: 6471684478458003625}
-  m_Layer: 0
+  - component: {fileID: 8047188166070766987}
+  m_Layer: 8
   m_Name: Pine_v1_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4934219150772252
 Transform:
@@ -107,19 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300006, guid: 11513268302b562498f3c140346b22c8, type: 3}
---- !u!208 &6471684478458003625
-NavMeshObstacle:
+--- !u!114 &8047188166070766987
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323533898846632}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 1, y: 4.214, z: 1}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 4.1940002, z: 0}
-  m_TimeToStationary: 0.5
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 0.77008617, y: 8.86946, z: 0.9501527}
+  m_Center: {x: 0.08445589, y: 3.93473, z: 0.052350968}
+  m_Area: 0
+  m_AffectedAgents: ffffffff

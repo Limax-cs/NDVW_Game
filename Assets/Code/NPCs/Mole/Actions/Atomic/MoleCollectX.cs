@@ -214,6 +214,7 @@ public class MoleCollectX : MoleAction
                 {
                     //Debug.Log("Object");
                     ObjectItem objectItem = target.GetComponent<ObjectItem>();
+                    this.hit.collider.transform.position += new Vector3(0.0f,2.0f,0.0f);
                     this.backpack[this.indexItem].transform.SetParent(this.pickUpParentStatic.transform, true);
 
                     objectItem.ToggleNavMeshObstacle(false);

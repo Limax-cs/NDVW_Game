@@ -92,13 +92,15 @@ public abstract class MoleAction : MonoBehaviour
         if (preConditions != null)
             foreach (WorldState w in preConditions)
             {
-                preconditions.Add(w.key, w.value);
+                if (!preconditions.ContainsKey(w.key))
+                    preconditions.Add(w.key, w.value);
             }
         
         if (afterEffects != null)
             foreach (WorldState w in afterEffects)
             {
-                effects.Add(w.key, w.value);
+                if (!effects.ContainsKey(w.key))
+                    effects.Add(w.key, w.value);
             }
     }
 

@@ -58,6 +58,9 @@ public class SlugBehaviour : MonoBehaviour
     public float playerDefence;
     public ResourceInteraction resourceInteraction;
 
+    // Spaceship
+    private GameObject spaceship;
+
     //Others
     //public SlugStatusUI SlugStatus;
     //public Rig RigAimDirection;
@@ -67,7 +70,15 @@ public class SlugBehaviour : MonoBehaviour
     {
         player = GetComponent<CharacterController>();
         resourceInteraction = GetComponent<ResourceInteraction>();
-        //RigAimDirection = GameObject.Find("Rig 1").GetComponent<Rig>();
+        //RigAimDirection = GameObject.Find("Rig 1").GetComponent<Rig>()
+        
+        Debug.Log("Placing Babo");
+        spaceship = GameObject.FindGameObjectWithTag("spaceship1");
+        Debug.Log("Spaceship Loc: "  + spaceship.transform.position + " | Babo Loc: " + player.transform.position);
+        player.enabled = false;
+        transform.position = spaceship.transform.position + new Vector3(0.0f, 10.0f, 0.0f);
+        player.enabled = true;
+        Debug.Log("Spaceship Loc: "  + spaceship.transform.position + " | Babo Loc: " + player.transform.position);
     }
 
     void Update()
@@ -130,6 +141,7 @@ public class SlugBehaviour : MonoBehaviour
         //Moviment
         HitImpulse();
         //FootAngle();
+        //player.transform.position += movePlayer * Time.deltaTime;
         player.Move(movePlayer * Time.deltaTime);
 
         //Animator Parameters

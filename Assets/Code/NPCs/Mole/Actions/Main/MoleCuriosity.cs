@@ -156,7 +156,7 @@ public class MoleCuriosity : MoleAction
                         this.preconditions.Add("Detect " + identification, 1);
                         this.effects.Clear();
                         this.effects.Add("Has " + identification, 1);
-                        this.actionName = "Has " + identification;
+                        //this.actionName = "Has " + identification;
                     }
                 }
             }

@@ -41,13 +41,15 @@ public class UpdateWorld : MonoBehaviour
     public TextMeshProUGUI purpleCrystalRival;
     public TextMeshProUGUI redCrystalRival;
 
-    void Awake()
+    void Start()
     {
         // GOALS STATUS
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         player_goals = GameObject.FindGameObjectsWithTag("spaceship1_item");
         rival_goals = GameObject.FindGameObjectsWithTag("spaceship2_item");
+        //Debug.Log("Player goals: " + player_goals.Length);
+        //Debug.Log("Rival goals: " + rival_goals.Length);
 
         int count = 0;
         foreach (GameObject g in player_goals)

@@ -280,6 +280,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rigged_Modular UFO 2.8.fbx_Rigged_Ufo
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1463214266414430917, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -291,6 +295,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8864419909013688249}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1561892548859115714}
     - targetCorrespondingSourceObject: {fileID: -7669564882196159373, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6989808624310125897}
@@ -2834,6 +2841,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1561892548859115714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7625600350551204814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 0.04, y: 0.04, z: 0.01}
+  m_Center: {x: 0, y: 0, z: 0}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &7684674591154670977 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8090848536985251042, guid: b9f0ad2e6a8ebac46aa984b993aff75e, type: 3}

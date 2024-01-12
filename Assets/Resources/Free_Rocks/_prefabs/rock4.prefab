@@ -12,13 +12,13 @@ GameObject:
   - component: {fileID: 3300000}
   - component: {fileID: 2300000}
   - component: {fileID: 6400000}
-  - component: {fileID: 5860313204834489413}
-  m_Layer: 0
+  - component: {fileID: -6331208545158326789}
+  m_Layer: 8
   m_Name: rock4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 95
   m_IsActive: 1
 --- !u!4 &400000
 Transform:
@@ -107,19 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 9551d23f5681244a5bf687feb1b45c62, type: 3}
---- !u!208 &5860313204834489413
-NavMeshObstacle:
+--- !u!114 &-6331208545158326789
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.6930001, y: 1.5230001, z: 1.291}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: 0.18400002, y: -0.25, z: 0.035}
-  m_TimeToStationary: 0.5
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Size: {x: 3.4372034, y: 3.0128512, z: 2.5068836}
+  m_Center: {x: 0.12775606, y: -0.20481753, z: 0.04126501}
+  m_Area: 1
+  m_AffectedAgents: ffffffff
