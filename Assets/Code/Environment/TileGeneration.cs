@@ -71,6 +71,18 @@ public class TileGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+        // Get Configuration
+        GameObject gcontroller = GameObject.FindGameObjectWithTag("GameController");
+        if (gcontroller != null)
+        {
+            Debug.Log("Set Configuration");
+            GameConfiguration gameConfig = gcontroller.GetComponent<GameConfiguration>();
+            mapScale = gameConfig.MapScale;
+            tileScale = (int)gameConfig.TileScale;
+            entitiesPerTileMax = (int)gameConfig.Entities;
+            weaponPerTile = (int)gameConfig.Weapons;
+        }
+
         GenerateTile();
     }
 

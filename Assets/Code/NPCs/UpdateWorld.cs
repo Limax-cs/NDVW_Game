@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.SceneManagement;
 
 public class UpdateWorld : MonoBehaviour
 {
@@ -40,6 +41,10 @@ public class UpdateWorld : MonoBehaviour
     public TextMeshProUGUI gemCrystalRival;
     public TextMeshProUGUI purpleCrystalRival;
     public TextMeshProUGUI redCrystalRival;
+
+    // Win and Loss menus
+    public GameObject WinScreen;
+    public GameObject LossScreen;
 
     void Start()
     {
@@ -291,5 +296,48 @@ public class UpdateWorld : MonoBehaviour
             }
         }
 
+        // Win and Loss Menus
+        bool achievedGoals = true;
+        BitArray b2 = new BitArray(new int[] { (int)GWorld.Instance.GetWorld().GetState("Player_Goals_Achieved") });
+        bool[] bits2 = new bool[b2.Count];
+        b2.CopyTo(bits2, 0);
+        for(int i = 0; i < player_goals_ui.Count; i++)
+        {
+            if(bits2[i] == false)
+            {
+                achievedGoals = false;
+            }
+        }
+
+
+        if(achievedGoals)
+        {
+            WinScreen.SetActive(true);
+        }
+        else
+        {
+            WinScreen.SetActive(false);
+        }
+
+        ResourceInteraction resourceInteraction = player.GetComponent<ResourceInteraction>();
+        if(resourceInteraction.agentParams.HP <= 0)
+        {
+            LossScreen.SetActive(true);
+        }
+        else
+        {
+            LossScreen.SetActive(false);
+        }
+
+    }
+
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene("Game");
+    }
+
+    public void QuitButton()
+    {
+        Application.Quit();
     }
 }

@@ -11,6 +11,15 @@ public class Spawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Get Configuration
+        GameObject gcontroller = GameObject.FindGameObjectWithTag("GameController");
+        if (gcontroller != null)
+        {
+            Debug.Log("Set Configuration");
+            GameConfiguration gameConfig = gcontroller.GetComponent<GameConfiguration>();
+            numEntities = (int)gameConfig.Moles;
+        }
+
         for (int i = 0; i < numEntities; i++)
         {
             Instantiate(entityPrefab, this.transform.position, Quaternion.identity);

@@ -36,6 +36,19 @@ public class LevelGeneration : MonoBehaviour
 
     void Awake()
     {
+        // Get Configuration
+        GameObject gcontroller = GameObject.FindGameObjectWithTag("GameController");
+        if (gcontroller != null)
+        {
+            UnityEngine.Debug.Log("Set Configuration");
+            GameConfiguration gameConfig = gcontroller.GetComponent<GameConfiguration>();
+            tileScale = (int)gameConfig.TileScale;
+            items2collect = (int)gameConfig.Goals;
+            mapWidthInTiles = (int)gameConfig.MapWidth;
+            mapDepthInTiles = (int)gameConfig.MapDepth;
+        }
+
+
         GenerateMap();
         //instantiateBases = true;
         spawnBases();

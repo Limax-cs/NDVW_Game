@@ -152,7 +152,7 @@ public class SlugBehaviour : MonoBehaviour
         animator.SetBool("Jump", Input.GetButtonDown("Jump"));
         animator.SetBool("isHit", isHit);
         //isDefeated = SlugStatus.isSlugDefeated(playerID);
-        //animator.SetBool("isDefeated", isDefeated);
+        animator.SetBool("isDefeated", isDefeated);
 
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -167,6 +167,24 @@ public class SlugBehaviour : MonoBehaviour
         if (terrainHitTimer > 0)
         {
             terrainHitTimer = terrainHitTimer -1;
+        }
+
+        // Recover after falling
+        if (transform.position.y < -500.0f)
+        {
+            player.enabled = false;
+            transform.position = spaceship.transform.position + new Vector3(0.0f, 10.0f, 0.0f);
+            player.enabled = true;
+        }
+
+        // Determine if is defeated
+        if (resourceInteraction.agentParams.HP <= 0)
+        {
+            isDefeated = true;
+        }
+        else
+        {
+            isDefeated = false;
         }
             
     }
