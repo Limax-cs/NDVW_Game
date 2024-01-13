@@ -16,6 +16,8 @@ public class MoleExplore : MoleAction
     private GameObject[] explorePoint;
     public List<GameObject> toExplorePoints;
     public bool canExplore = false;
+    private int exploreUpdate = 0;
+    private float distanceCourse = 999999;
 
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -48,29 +50,41 @@ public class MoleExplore : MoleAction
 
     public void LateUpdate()
     {
-        canExplore = false;
-        cost = 9999999999;
+        exploreUpdate = exploreUpdate + 1;
 
-        foreach(GameObject eP in toExplorePoints)
+        if (exploreUpdate > 30)
         {
-            // Determine if a path is reachable
-            NavMeshPath path = new NavMeshPath();
-            bool hasPath = NavMesh.CalculatePath(transform.position, eP.transform.position, NavMesh.AllAreas, path);
+            canExplore = false;
+            cost = 9999999999;
+            distanceCourse = 9999999999;
 
-            if (hasPath)
+            foreach(GameObject eP in toExplorePoints)
             {
-                // Compute the distance of a path
-                float distance = CalculatePathDistance(path);
-                float ePcost = distance;
-
-                // If cost is lower, select this point
-                if (ePcost < cost)
+                if (Vector3.Distance(transform.position, eP.transform.position) + 20 < distanceCourse)
                 {
-                    canExplore = true;
-                    cost = ePcost;
-                    target = eP;
+                    // Determine if a path is reachable
+                    NavMeshPath path = new NavMeshPath();
+                    bool hasPath = NavMesh.CalculatePath(transform.position, eP.transform.position, NavMesh.AllAreas, path);
+
+                    if (hasPath)
+                    {
+                        // Compute the distance of a path
+                        float distance = CalculatePathDistance(path);
+                        float ePcost = distance;
+
+                        // If cost is lower, select this point
+                        if (ePcost < cost)
+                        {
+                            canExplore = true;
+                            cost = ePcost;
+                            distanceCourse = Vector3.Distance(transform.position, eP.transform.position);
+                            target = eP;
+                        }
+                    }
                 }
             }
+
+            exploreUpdate = 0;
         }
 
         if (IsFinished())
@@ -78,6 +92,7 @@ public class MoleExplore : MoleAction
             toExplorePoints.Remove(target);
             running = false;
         }
+        
     }
 
     public float CalculatePathDistance(NavMeshPath path)

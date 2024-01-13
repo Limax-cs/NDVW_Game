@@ -262,7 +262,7 @@ public class SlugBehaviour : MonoBehaviour
         }
     }*/
 
-
+    /*
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
         // Terrain Collision
@@ -280,23 +280,23 @@ public class SlugBehaviour : MonoBehaviour
             Debug.Log("Babo hit");
         }
 
-    /*
-        if(hit.collider.CompareTag("Salt"))
-        {
-            if (Time.time > (hitscenarioTime + 2))
-            {
-                hitscenarioTime = Time.time;
-                isHit = true;
-                //if (!isDefeated)
-                //    SlugStatus.SetScenarioDamage(this.playerID, "Salt", this.playerDefence);
-            }
-        }*/
-    }
+    }*/
 
     //HitReaction
     //On collision
     private void OnCollisionEnter(Collision collision)
     {
+
+        if(collision.collider.CompareTag("damage"))
+        {
+            WeaponItem weaponItem = collision.collider.GetComponent<WeaponItem>();
+            resourceInteraction.agentParams.HP = Mathf.Max(resourceInteraction.agentParams.HP - weaponItem.weaponDescrib.attack, 0.0f);
+            Debug.Log("Babo hit");
+            isHit = true;
+            hitImpulse = weaponItem.weaponDescrib.impulse;
+            hitDirection = collision.contacts[0].normal;
+            hitTime = Time.time;
+        }
         
         /*
         if (collision.collider.CompareTag("SlimedSaltBullet") || collision.collider.CompareTag("SaltBullet") || collision.collider.CompareTag("DirectSaltBullet"))

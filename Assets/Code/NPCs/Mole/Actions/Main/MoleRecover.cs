@@ -25,6 +25,8 @@ public class MoleRecover : MoleAction
     private MoleDropAny dropAnyItem;
     public List<MoleAction> subactions;
 
+    private int replan_counter = 0;
+
 
 
     /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -267,11 +269,13 @@ public class MoleRecover : MoleAction
 
     public override void Perform()
     {
+        replan_counter = replan_counter + 1;
         // If no plan
         if ((planner == null | actionQueue == null) && !plan)
         {
             //Debug.Log("Mole " + this.agentParams.ID + " - Start planning for recovering");
             plan = true;
+            replan_counter = 0;
         }
 
         // if can recover item
@@ -291,6 +295,12 @@ public class MoleRecover : MoleAction
 
             // Run subactions during execution
             this.RunSubActions();
+        }
+
+        if (replan_counter > 300)
+        {
+            replan_counter = 0;
+            plan = false;
         }
     }
 

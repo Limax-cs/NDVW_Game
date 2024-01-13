@@ -191,9 +191,9 @@ public class MoleAgent : MonoBehaviour
         actionScores.Add(0.0f);
 
         // Instantiate Spaceship recovery actions
-        MoleAggresive aggressive = this.gameObject.AddComponent<MoleAggresive>();
-        actions.Add(aggressive);
-        actionScores.Add(0.0f);
+        //MoleAggresive aggressive = this.gameObject.AddComponent<MoleAggresive>();
+        //actions.Add(aggressive);
+        //actionScores.Add(0.0f);
 
         // Instantiate Spaceship recovery actions
         MoleCuriosity curiosity = this.gameObject.AddComponent<MoleCuriosity>();
@@ -429,7 +429,7 @@ public class MoleAgent : MonoBehaviour
     public void UtilitySystem()
     {
         updateCount = updateCount + 1;
-        if (updateCount > 30)
+        if (updateCount > 100)
         {
             // Extract the utility score
             float totalScore = 0;
