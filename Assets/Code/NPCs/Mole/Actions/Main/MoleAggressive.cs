@@ -12,17 +12,12 @@ public class MoleAggresive : MoleAction
 
     public bool plan = false;
     public bool canAttack = false;
-    public GameObject[] spaceship_items;
-    public List<GameObject> items2collect;
-    public GameObject target_item;
+    public GameObject target;
 
 
     // Possible subactions
-    private MoleGoToX goToGoalItem;
-    private MoleGoToX goToBase;
-    private MoleUseX applyItem;
-    private MoleCollectX collectItem;
-    //private DropAny dropAnyItem;
+    private MoleGoToX goToEnemy;
+    private MoleAttackXY attackXY;
     public List<MoleAction> subactions;
 
 
@@ -35,40 +30,21 @@ public class MoleAggresive : MoleAction
     {
         // Configuration
         actionName = "Agressive";
-        spaceship_items = GameObject.FindGameObjectsWithTag("spaceship2_item");
-        items2collect = new List<GameObject>();
-        foreach(GameObject item in spaceship_items)
-        {
-            items2collect.Add(item);
-        }
 
-        // Initialize Recover Actions
-        GameObject spaceship = GameObject.FindGameObjectWithTag("spaceship2");
-
-        // -- Go To Spaceship Item
-        goToGoalItem = this.gameObject.AddComponent<MoleGoToX>();
-        goToGoalItem.target = spaceship;
-        goToGoalItem.actionName = "Go To Spaceship Item";
+        // -- Go To Enemy
+        goToEnemy = this.gameObject.AddComponent<MoleGoToX>();
+        //goToEnemy.target = spaceship;
+        goToEnemy.actionName = "Go To Enemy";
 
         // -- Go To Base
-        goToBase = this.gameObject.AddComponent<MoleGoToX>();
-        goToBase.target = spaceship;
-        goToBase.actionName = "Go To Base";
+        attackXY = this.gameObject.AddComponent<MoleAttackXY>();
+        attackXY.actionName = "Attack";
 
-        // -- Recover spaceship Item
-        applyItem = this.gameObject.AddComponent<MoleUseX>();
-        applyItem.actionName = "Recover Spaceship Item";
-
-        // -- Collect spaceship Item
-        collectItem = this.gameObject.AddComponent<MoleCollectX>();
-        collectItem.actionName = "Collect Spaceship Item";
 
         // Add actions to list
         subactions = new List<MoleAction>();
-        subactions.Add(goToGoalItem);
-        subactions.Add(collectItem);
-        subactions.Add(applyItem);
-        subactions.Add(goToBase);
+        subactions.Add(goToEnemy);
+        subactions.Add(attackXY);
     }
 
     public void LateUpdate()
@@ -76,12 +52,12 @@ public class MoleAggresive : MoleAction
         // If no plan, create a new plan
         if (plan)
         {
+            /*
             //Debug.Log("planning");
             canAttack = false;
             cost = 99999999;
 
             // Select a plan
-            spaceship_items = GameObject.FindGameObjectsWithTag("spaceship2_item");
             foreach(GameObject item in spaceship_items)
             {
                 if (item != null)
@@ -122,7 +98,7 @@ public class MoleAggresive : MoleAction
                                 cost = subplanCost;
                                 actionQueue = actionQueueItem;
                                 currentGoal = recoverItemGoal;
-                                target_item = item;
+                                target = item;
 
                                 // Update preconditions and effects
                                 WorldState recoverItem = new WorldState("Recover " + objectItem.ID, 1);
@@ -141,12 +117,12 @@ public class MoleAggresive : MoleAction
                 }
             }
 
-            if (actionQueue != null && target_item != null)
+            if (actionQueue != null && target != null)
             {
-                ObjectItem objectItem = target_item.GetComponent<ObjectItem>();
+                ObjectItem objectItem = target.GetComponent<ObjectItem>();
                 Debug.Log("Mole " + this.agentParams.ID + " - Decided to go for SSItem " + objectItem.ID );
-                configureActions(target_item);    
-            }
+                configureActions(target);    
+            }*/
 
             plan = false;
 
@@ -155,6 +131,7 @@ public class MoleAggresive : MoleAction
 
     public void configureActions(GameObject item)
     {
+        /*
         GameObject spaceship = GameObject.FindGameObjectWithTag("spaceship2");
 
         // Object item
@@ -216,7 +193,7 @@ public class MoleAggresive : MoleAction
         collectItem.UpdateConditions(new List<WorldState>(), new List<WorldState>());
 
         // -- Drop Any Item
-        // --
+        // --*/
         
     }
 
@@ -260,7 +237,7 @@ public class MoleAggresive : MoleAction
         // If no plan
         if ((planner == null | actionQueue == null) && !plan)
         {
-            //Debug.Log("Mole " + this.agentParams.ID + " - Start planning for recovering");
+            //Debug.Log("Mole " + this.agentParams.ID + " - Start plobjecttarganning for recovering");
             plan = true;
         }
 
@@ -268,13 +245,13 @@ public class MoleAggresive : MoleAction
         if (canAttack)
         {
             // If close enough, look at the object
-            if(target_item != null)
+            if(target != null)
             {
-                //Debug.Log("Target Item: " + target_item);
-                ObjectItem objectItem = target_item.GetComponent<ObjectItem>();
-                if((Vector3.Distance(this.transform.position, target_item.transform.position) < this.range) && 
+                //Debug.Log("Target Item: " + target);
+                ObjectItem objectItem = target.GetComponent<ObjectItem>();
+                if((Vector3.Distance(this.transform.position, target.transform.position) < this.range) && 
                     !(this.beliefs.HasState("Has Mole SSItem " + objectItem.ID)))
-                    this.targetDirection.transform.position = target_item.transform.position;
+                    this.targetDirection.transform.position = target.transform.position;
                 else
                     this.targetDirection.transform.localPosition = new Vector3(0.0f, 0.5f, 3.0f);
             }

@@ -324,8 +324,8 @@ public class MoleRecover : MoleAction
 
             if (this.beliefs.HasState("Detect Mole SSItem " + objectItem.ID) && (GWorld.Instance.GetWorld().HasState("Available Mole SSItem " + objectItem.ID) || this.beliefs.HasState("Has Mole SSItem " + objectItem.ID)) && !(this.beliefs.HasState("Recover " + objectItem.ID)))
             {
-                // Has Item
-                if(this.beliefs.HasState("Has Mole SSItem " + objectItem.ID))
+                // Hasn't the Item
+                if(!this.beliefs.HasState("Has Mole SSItem " + objectItem.ID))
                 {
                     NavMeshPath path = new NavMeshPath();
                     bool hasPath = NavMesh.CalculatePath(transform.position, item.transform.position, NavMesh.AllAreas, path);
@@ -334,18 +334,20 @@ public class MoleRecover : MoleAction
                     if (hasPath && hasPath2)
                     {
                         itemScore.Add(CalculatePathDistance(path) + CalculatePathDistance(path2));
-                        notCollected.Add(0);
+                        notCollected.Add(1);
                     }
                 }
-                // Does not have the item
+                // Have the item
                 else
                 {
+                    Debug.Log("Hi");
                     NavMeshPath path2 = new NavMeshPath();
                     bool hasPath2 = NavMesh.CalculatePath(item.transform.position, spaceship.transform.position, NavMesh.AllAreas, path2);
                     if (hasPath2)
                     {
+                        Debug.Log("Hi2");
                         itemScore.Add(CalculatePathDistance(path2));
-                        notCollected.Add(1);
+                        notCollected.Add(0);
                     }
                 }
             }

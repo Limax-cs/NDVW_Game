@@ -450,7 +450,7 @@ public class MoleAgent : MonoBehaviour
             {
                 utilitiesValue += actions[k].actionName + ": " + Mathf.Round(10000*actionScores[k])/100 + "%; ";
             }
-            //Debug.Log("Agent " + moleParams.ID + " - Utilities: " + utilitiesValue);
+            Debug.Log("Agent " + moleParams.ID + " - Utilities: " + utilitiesValue);
 
             if (totalScore > 0)
             {

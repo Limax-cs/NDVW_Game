@@ -68,9 +68,13 @@ public class MoleExplore : MoleAction
 
                     if (hasPath)
                     {
-                        // Compute the distance of a path
-                        float distance = CalculatePathDistance(path);
-                        float ePcost = distance;
+                        float ePcost = Vector3.Distance(transform.position, eP.transform.position);
+                        if (ePcost < 100)
+                        {
+                            // Compute the distance of a path
+                            float distance = CalculatePathDistance(path);
+                            ePcost = distance;
+                        }
 
                         // If cost is lower, select this point
                         if (ePcost < cost)
@@ -191,7 +195,7 @@ public class MoleExplore : MoleAction
         if (utilityDistance > 1.0f)
             utilityDistance = 1.0f;
         
-        return utilityDistance;
+        return utilityDistance/2;
     }
 
 

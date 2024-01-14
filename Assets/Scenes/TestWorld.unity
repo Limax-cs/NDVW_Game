@@ -3737,7 +3737,7 @@ MonoBehaviour:
   - {fileID: 8426512377884299104, guid: 8e7ff67b1dec1224fa4735a24a2ad31e, type: 3}
   - {fileID: 6539331181028896470, guid: 2a2d493213334f5429e2ea4823d42ca7, type: 3}
   - {fileID: 7376179727411023868, guid: f64496f06b0aee8498da2a76a7e5db21, type: 3}
-  weaponPerTile: 6
+  weaponPerTile: 2
   navMeshAgent: {fileID: 0}
   waves:
   - seed: 5613

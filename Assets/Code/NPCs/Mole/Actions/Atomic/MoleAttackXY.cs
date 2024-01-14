@@ -71,8 +71,15 @@ public class MoleAttackXY : MoleAction
                 return false;
         }
 
+        float dist = 10.0f;
+        if (target.GetComponent<WeaponItem>())
+        {
+            WeaponItem weaponItem = target.GetComponent<WeaponItem>();
+            dist = weaponItem.weaponDescrib.range;
+        }
+
         //Debug.Log("Distance: " + Vector3.Distance(preconditionPos, conditionPos));
-        if (Vector3.Distance(preconditionPos, conditionPos) > 10.0f)
+        if (Vector3.Distance(preconditionPos, conditionPos) > dist)
             return false;
         return true;
     }
@@ -119,17 +126,16 @@ public class MoleAttackXY : MoleAction
         
         if (hasItem)
         {
-            Debug.Log("Use Item in index " + this.indexItem);
+            //Debug.Log("Use Item in index " + this.indexItem);
             // Use item
             if (this.backpack[this.indexItem] is not null)
             {
-                if (this.backpack[this.indexItem].GetComponent<ObjectItem>())
+                if (this.backpack[this.indexItem].GetComponent<WeaponItem>())
                 {
-                    if(this.backpack[this.indexItem].tag == "spaceship1_item" || this.backpack[this.indexItem].tag == "spaceship2_item")
+                    if(this.backpack[this.indexItem].tag == "weapon")
                     {
-                        ObjectItem objectitem = this.backpack[this.indexItem].GetComponent<ObjectItem>();
-                        objectitem.UseObject();
-                        this.backpack[this.indexItem] = null;
+                        WeaponItem weaponitem = this.backpack[this.indexItem].GetComponent<WeaponItem>();
+                        weaponitem.Attack();
                     }
                     
                 }
@@ -138,7 +144,7 @@ public class MoleAttackXY : MoleAction
         }
         else
         {
-            Debug.Log("Cannot use the item");
+            Debug.Log("Cannot use the weapon");
         }
     }
 

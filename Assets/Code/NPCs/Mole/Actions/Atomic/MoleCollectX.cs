@@ -26,6 +26,7 @@ public class MoleCollectX : MoleAction
             WorldState posX = new WorldState("Agent X POS", target.transform.position[0]);
             WorldState posY = new WorldState("Agent Y POS", target.transform.position[1]);
             WorldState posZ = new WorldState("Agent Z POS", target.transform.position[2]);
+            WorldState freeSpace = new WorldState("FreeSpace", 1);
 
             // Normal status
             if (target.tag == "spaceship1_item")
@@ -70,6 +71,7 @@ public class MoleCollectX : MoleAction
             preconditionsList.Add(posX);
             preconditionsList.Add(posY);
             preconditionsList.Add(posZ);
+            preconditionsList.Add(freeSpace);
             effectsList.Add(hasItem);
 
             // Update status
@@ -217,7 +219,7 @@ public class MoleCollectX : MoleAction
                     this.hit.collider.transform.position += new Vector3(0.0f,2.0f,0.0f);
                     this.backpack[this.indexItem].transform.SetParent(this.pickUpParentStatic.transform, true);
 
-                    objectItem.ToggleNavMeshObstacle(false);
+                    //objectItem.ToggleNavMeshObstacle(false);
                 }
 
                 // Parent object
