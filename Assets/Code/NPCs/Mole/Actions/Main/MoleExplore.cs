@@ -177,11 +177,18 @@ public class MoleExplore : MoleAction
         List<float> exploreDistance = new List<float>();
         foreach(GameObject eP in toExplorePoints)
         {
-            NavMeshPath path = new NavMeshPath();
-            bool hasPath = NavMesh.CalculatePath(transform.position, eP.transform.position, NavMesh.AllAreas, path);
-            if (hasPath)
+            if (Vector3.Distance(transform.position, eP.transform.position) < 25)
             {
-                exploreDistance.Add(CalculatePathDistance(path));
+                NavMeshPath path = new NavMeshPath();
+                bool hasPath = NavMesh.CalculatePath(transform.position, eP.transform.position, NavMesh.AllAreas, path);
+                if (hasPath)
+                {
+                    exploreDistance.Add(CalculatePathDistance(path));
+                }
+            }
+            else
+            {
+                exploreDistance.Add(Vector3.Distance(transform.position, eP.transform.position));
             }
         }
 
